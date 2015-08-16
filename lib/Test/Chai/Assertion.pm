@@ -59,14 +59,27 @@ sub assert {
             show_diff => $show_diff,
         }, undef);
 
-        my $tb = $CLASS->builder;
-        $tb->ok(0, $err->message);
+        return $self->fail($err->message);
     }
 
     else {
-        my $tb = $CLASS->builder;
-        $tb->ok(1);
+        my $msg = Util->get_message($self, [@_]);
+        return $self->pass($msg);
     }
+}
+
+sub fail {
+    my ($class, $msg) = @_;
+
+    my $tb = $CLASS->builder;
+    return $tb->ok(0, $msg);
+}
+
+sub pass {
+    my ($class, $msg) = @_;
+
+    my $tb = $CLASS->builder;
+    return $tb->ok(1, $msg);
 }
 
 sub _obj {

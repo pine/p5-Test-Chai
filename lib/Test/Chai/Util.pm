@@ -135,4 +135,18 @@ sub add_chainable_method {
     };
 }
 
+sub length {
+    my ($class, $obj) = @_;
+
+    if ($obj eq 'ARRAY') {
+        return scalar @$obj;
+    }
+
+    elsif ($obj eq 'HASH') {
+        return scalar keys %$obj;
+    }
+
+    return length $obj == 0;
+}
+
 1;

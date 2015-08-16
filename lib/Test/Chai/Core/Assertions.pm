@@ -3,6 +3,8 @@ use strict;
 use warnings;
 use utf8;
 
+use Scalar::Util qw/looks_like_number/;
+
 sub Assertion { 'Test::Chai::Assertion' }
 sub Util      { 'Test::Chai::Util'      }
 
@@ -18,32 +20,32 @@ do {
 /;
 
 Assertion->add_property('not', sub {
-    Util->flag(shift, 'negate', 1);
+    flag(shift, 'negate', 1);
 });
 
 Assertion->add_property('deep', sub {
-    Util->flag(shift, 'deep', 1);
+    flag(shift, 'deep', 1);
 });
 
 Assertion->add_property('any', sub {
-    Util->flag(shift, 'any', 1);
-    Util->flag(shift, 'all', 0);
+    flag(shift, 'any', 1);
+    flag(shift, 'all', 0);
 });
 
 Assertion->add_property('all', sub {
-    Util->flag(shift, 'all', 0);
-    Util->flag(shift, 'any', 1);
+    flag(shift, 'all', 0);
+    flag(shift, 'any', 1);
 });
 
 my $an = sub {
     my ($self, $type, $msg) = @_;
 
-    Util->flag($self, 'message', $msg) if defined $msg;
+    flag($self, 'message', $msg) if defined $msg;
 
-    my $obj     = Util->flag($self, 'object');
+    my $obj     = flag($self, 'object');
     my $article = $type =~ /^[aeiou]/i ? 'an ' : 'a ';
 
-    $self->assert(
+    return $self->assert(
         Util->matcher($type)->($obj),
         'expected #{this} to be ' . $article . $type,
         'expected #{this} not to be ' . $article . $type
@@ -56,15 +58,15 @@ Assertion->add_chainable_method('a',  $an);
 # -----------------------------------------------------------------------------------
 
 my $include_chaining_behavior = sub {
-    Util->flag(shift, 'contains', 1);
+    flag(shift, 'contains', 1);
 };
 
 my $include = sub {
     my ($self, $val, $msg) = @_;
 
-    Util->flag($self, 'message', $msg) if defined $msg;
+    flag($self, 'message', $msg) if defined $msg;
 
-    my $obj      = Util->flag($self, 'object');
+    my $obj      = flag($self, 'object');
     my $expected = 0;
 
     if (ref $obj eq 'ARRAY' && ref $val eq 'HASH') {
@@ -77,7 +79,7 @@ my $include = sub {
     }
 
     elsif (ref $val eq 'HASH') {
-        if (!Util->flag($self, 'negate')) {
+        if (!flag($self, 'negate')) {
             for my $i (keys $val) {
                 # FIXME
             }
@@ -114,8 +116,9 @@ Assertion->add_chainable_method('contains', $include, $include_chaining_behavior
 
 Assertion->add_property('ok', sub {
     my $self = shift;
-    $self->assert(
-        Util->flag($self, 'object'),
+    my $obj  = flag($self, 'object');
+    return $self->assert(
+        $obj,
         'expected #{this} to be truthy',
         'expected #{this} to be falsy'
     );
@@ -125,8 +128,9 @@ Assertion->add_property('ok', sub {
 
 Assertion->add_property('true', sub {
     my $self = shift;
-    $self->assert(
-        1 == Util->flag($self, 'object'),
+    my $obj  = flag($self, 'object');
+    return $self->assert(
+        looks_like_number($obj) && $obj == 1,
         'expected #{this} to be 1',
         'expected #{this} to be 0'
     );
@@ -134,8 +138,9 @@ Assertion->add_property('true', sub {
 
 Assertion->add_property('false', sub {
     my $self = shift;
-    $self->assert(
-        0 == Util->flag($self, 'object'),
+    my $obj  = flag($self, 'object');
+    return $self->assert(
+        looks_like_number($obj) && $obj == 0,
         'expected #{this} to be 0',
         'expected #{this} to be 1'
     );
@@ -145,14 +150,13 @@ Assertion->add_property('false', sub {
 
 my $undef = sub {
     my $self = shift;
-    $self->assert(
-        !defined Util->flag($self, 'object'),
+    return $self->assert(
+        !defined flag($self, 'object'),
         'expected #{this} to be undef',
         'expected #{this} not to be undef'
     );
 };
 
-Assertion->add_property('null',      $undef);
 Assertion->add_property('undef',     $undef);
 Assertion->add_property('undefined', $undef);
 
@@ -161,7 +165,7 @@ Assertion->add_property('undefined', $undef);
 Assertion->add_property('NaN', sub {
     my $self = shift;
     $self->assert(
-        'NaN' eq Util->flag($self, 'object'),
+        'NaN' eq flag($self, 'object'),
         'expected #{this} to be NaN',
         'expected #{this} to be NaN'
     );
@@ -172,7 +176,7 @@ Assertion->add_property('NaN', sub {
 Assertion->add_property('exist', sub {
     my $self = shift;
     $self->assert(
-        defined Util->flag($self, 'object'),
+        defined flag($self, 'object'),
         'expected #{this} to exist',
         'expected #{this} to not exist'
     );
@@ -183,23 +187,8 @@ Assertion->add_property('exist', sub {
 my $empty = sub {
     my ($self) = @_;
 
-    my $obj     = Util->flag($self, 'object');
-    my $expected = 0;
-
-    if ($obj eq 'ARRAY') {
-        $expected = scalar @$obj;
-    }
-
-    elsif ($obj eq 'HASH') {
-        $expected = keys %$obj == 0;
-    }
-
-    else {
-        $expected = length $obj == 0;
-    }
-
     $self->assert(
-        defined Util->flag($self, 'object'),
+        Util->length(flag($self, 'object')) == 0,
         'expected #{this} to exist',
         'expected #{this} to not exist'
     );
@@ -212,23 +201,24 @@ Assertion->add_property('empty', $empty);
 my $assert_equal = sub {
     my ($self, $val, $msg) = @_;
 
-    $msg = Util->flag($self, 'message', $msg) if defined $msg;
-    my $obj = Util->flag($self, 'object');
+    $msg = flag($self, 'message', $msg) if defined $msg;
+    my $obj = flag($self, 'object');
 
-    if (Util->flag($self, 'deep')) {
+    if (flag($self, 'deep')) {
         return $self->eql($val);
     }
 
-    else {
-        $self->assert(
-            $val eq $obj,
-            'expected #{this} to equal #{exp}',
-            'expected #{this} to not equal #{exp}',
-            $val,
-            $self->_obj,
-            1
-        );
-    }
+    my $equals       = defined $val && defined $obj && $val eq $obj;
+    my $equals_undef = !defined $val && !defined $obj; # undef == undef
+
+    return $self->assert(
+        $equals || $equals_undef,
+        'expected #{this} to equal #{exp}',
+        'expected #{this} to not equal #{exp}',
+        $val,
+        $self->_obj,
+        1
+    );
 };
 
 Assertion->add_method('equal',  $assert_equal);
@@ -242,7 +232,7 @@ my $assert_eql = sub {
 
     flag($self, 'message', $msg) if defined $msg;
     $self->assert(
-        Util->eql($obj, Util->flag($self, 'object')),
+        Util->eql($obj, flag($self, 'object')),
         'expected #{this} to deeply equal #{exp}',
         'expected #{this} to not deeply equal #{exp}',
         $obj,
@@ -253,5 +243,97 @@ my $assert_eql = sub {
 
 Assertion->add_method('eql',  $assert_equal);
 Assertion->add_method('eqls', $assert_equal);
+
+# -----------------------------------------------------------------------------------
+
+my $assert_above = sub {
+    my ($self, $n, $msg) = @_;
+
+    flag($self, 'message', $msg);
+    my $obj = flag($self, 'object');
+
+    if (flag($self, 'do_length')) {
+        my $len = Util->length($obj);
+        $self->assert(
+            $len > $n,
+            'expected #{this} to have a length above #{exp} but got #{act}',
+            'expected #{this} to not have a length above #{exp}',
+            $n,
+            $len
+        );
+    }
+
+    else {
+        $self->assert(
+            $obj > $n,
+            'expected #{this} to be above ' . $n,
+            'expected #{this} to be at most ' . $n
+        );
+    }
+};
+
+Assertion->add_method('above',        $assert_above);
+Assertion->add_method('gt',           $assert_above);
+Assertion->add_method('greater_than', $assert_above);
+
+# -----------------------------------------------------------------------------------
+
+my $assert_least = sub {
+    my ($self, $n, $msg) = @_;
+
+    flag($self, 'message', $msg);
+    my $obj = flag($self, 'object');
+
+    if (flag($self, 'do_length')) {
+        my $len = Util->length($obj);
+        $self->assert(
+            $len >= $n,
+            'expected #{this} to have a length a least #{exp} but got #{act}',
+            'expected #{this} to not have a length bellow #{exp}',
+            $n,
+            $len
+        );
+    }
+
+    else {
+        $self->assert(
+            $obj >= $n,
+            'expected #{this} to be at least ' . $n,
+            'expected #{this} to be below ' . $n
+        );
+    }
+};
+
+# -----------------------------------------------------------------------------------
+
+# FIXME assertBelow
+# FIXME assertMost
+
+# -----------------------------------------------------------------------------------
+
+Assertion->add_method('within', sub {
+    my ($self, $start, $finish, $msg) = @_;
+
+    flag($self, 'message', $msg) if defined $msg;
+    my $obj   = flag($self, 'object');
+    my $range = $start . '..' . $finish;
+
+    if (flag($self, 'do_length')) {
+        my $len = Util->length($obj);
+        return $self->assert(
+            $len >= $start && $len < $finish,
+            'expected #{this} to have a length within ' . $range,
+            'expected #{this} to not have a length within ' . $range
+        );
+    }
+
+    else {
+        return $self->assert(
+            $obj >= $start && $obj <= $finish,
+            'expected #{this} to be within ' . $range,
+            'expected #{this} to not be within ' . $range
+        );
+   }
+});
 
 1;
