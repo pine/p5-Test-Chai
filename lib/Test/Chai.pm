@@ -30,7 +30,7 @@ Test::Chai - BDD / TDD assertion framework for Perl that can be paired with any 
     subtest test => sub {
         expect('test')->to->equal('test'); # ok
         expect([ 1, 2, 3 ])->to->include(3); # ok
-        expect('test')->not->to->be('Bool'); # ok
+        expect('test')->to->not->be('Bool'); # ok
         expect('NaN')->to->be('Int'); # not ok
     };
 

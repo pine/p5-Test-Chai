@@ -6,8 +6,13 @@ use utf8;
 use parent qw/Test::Builder::Module/;
 
 use Test::Chai::AssertionError;
+use Test::Chai::Config;
 
-sub Util { 'Test::Chai::Util' }
+sub Util   { 'Test::Chai::Util' }
+sub Config { 'Test::Chai::Config' }
+sub AssertionError { 'Test::Chai::AssertionError' }
+
+sub flag { Util->flag(@_) }
 
 my $CLASS = __PACKAGE__;
 
@@ -38,41 +43,42 @@ sub add_chainable_method {
 
 sub assert {
     my $self = shift;
-    my ($expr, $msg, $negateMsg, $expected, $_actual, $showDiff) = @_;
+    my ($expr, $msg, $negateMsg, $expected, $_actual, $show_diff) = @_;
 
     my $ok = Util->test($self, [@_]);
+    $show_diff = 0 if defined $show_diff && $show_diff != 1;
+    $show_diff = 0 if Config->show_diff != 1;
 
-    # FIXME: showDiff
     if (!$ok) {
         my $msg    = Util->get_message($self, [@_]);
         my $actual = Util->get_actual($self, [@_]);
 
-        $self->fail($msg);
+        my $err = AssertionError->new($msg, {
+            actual    => $actual,
+            expected  => $expected,
+            show_diff => $show_diff,
+        }, undef);
 
-        # AssertionError->new($msg, {
-        #     actual   => $actual,
-        #     expected => $expected,
-        #     # showDiff => $showDiff, # FIXME
-        # }, undef)->throw; # FIXME
+        my $tb = $CLASS->builder;
+        $tb->ok(0, $err->message);
     }
 
     else {
-        $self->pass;
+        my $tb = $CLASS->builder;
+        $tb->ok(1);
     }
 }
 
-sub pass {
-    my $class = shift;
+sub _obj {
+    my ($self, $val) = @_;
 
-    my $tb = $CLASS->builder;
-    $tb->ok(1, @_);
-}
+    if (@_ == 1) {
+        return flag($self, 'object');
+    }
 
-sub fail {
-    my $class = shift;
-
-    my $tb = $CLASS->builder;
-    $tb->ok(0, @_);
+    else {
+        flag($self, 'object', $val);
+    }
 }
 
 1;

@@ -3,40 +3,64 @@ use strict;
 use warnings;
 use utf8;
 
-use Exporter qw/import/;
-our @EXPORT = qw/AssertionError/;
+use Data::Structure::Util qw/unbless/;
 
-my $CLASS = __PACKAGE__;
-sub AssertionError {
-    return $CLASS;
+use Test::Chai::Util;
+sub Util { 'Test::Chai::Util' }
+
+sub exclude {
+    my $excludes = [@_];
+
+    my $exclude_props = sub {
+        my ($res, $obj) = @_;
+
+        for my $key (keys %$obj) {
+            if (!grep { $_ eq $key } @$excludes) {
+                $res->{$key} = $obj->{$key};
+            }
+        }
+    };
+
+    return sub {
+        my $args = [@_];
+        my $i    = 0;
+        my $res  = {};
+
+        for (my $i = 0; $i < @$args; $i++) {
+            $exclude_props->($res, $args->[$i]);
+        }
+
+        return $res;
+    };
 }
 
 sub new {
     my ($class, $message, $_props, $ssf) = @_;
 
-    # my $extend =
+    my $extend = exclude('name', 'message', 'stack', 'constructor', 'toJSON');
+    my $props  = $extend->($_props // {});
 
     my $self = {
-        message  => $message // 'Unspecified AssertionError',
-        showDiff => 0,
+        message   => $message // 'Unspecified AssertionError',
+        show_diff => 0,
     };
 
-    while (my ($key, $value) = each(%$_props)) {
-        $self->{key} = $value;
+    for my $key (keys %$props) {
+        $self->{$key} = $props->{$key};
     }
-
-    # FIXME ssf
 
     bless $self => $class;
     return $self;
 }
 
-sub throw {
+sub name { 'AssertionError' }
+
+sub message {
     my $self = shift;
 
-    my $tb = Test::Builder->new;
-    $tb->($self->{message});
-    $tb->is_passing(0) unless $tb->in_todo;
+    my $extend = exclude('constructor', 'toJSON', 'stack');
+    my $props  = $extend->({ name => $self->name }, unbless($self));
+    return Util->obj_display($props);
 }
 
 1;

@@ -5,6 +5,7 @@ use utf8;
 
 use Mouse::Util::TypeConstraints ();
 use Test::Deep::NoTest;
+use DDP;
 
 sub test {
     my ($class, $obj, $args) = @_;
@@ -39,15 +40,21 @@ sub get_message {
 
     $msg = $msg->() if ref $msg eq 'CODE';
     $msg = defined $msg ? $msg : '';
-
-    # FIXME: objDisplay
+    $msg =~ s/#{this}/@{[$class->obj_display($val)]}/g;
+    $msg =~ s/#{act}/@{[$class->obj_display($actual)]}/g;
+    $msg =~ s/#{exp}/@{[$class->obj_display($expected)]}/g;
 
     return defined $flag_msg ? $flag_msg . ': ' . $msg : $msg;
 }
 
 sub get_actual {
     my ($class, $obj, $args) = @_;
-    return @$args > 4 ? $args->[4] : $obj->{_obj};
+    return @$args > 4 ? $args->[4] : $obj->_obj;
+}
+
+sub obj_display {
+    my ($class, $obj) = @_;
+    return np($obj); # FIXME
 }
 
 sub flag {

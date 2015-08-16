@@ -10,11 +10,12 @@ use Data::Dumper;
 subtest expect => sub {
     expect(10)->to->be->a('Int');
     expect('abc')->to->be->a('Str');
-    expect(0)->not->to->be->ok;
-    expect(1)->not->to->be->undef;
+    expect(0)->to->not->be->ok;
+    expect(1)->to->not->be->undef;
     expect('NaN')->to->be->NaN;
     expect([1,2,3])->to->include(3);
     expect([])->to->be->empty;
+    expect('abc')->to->equal('abcc');
 };
 
 done_testing;

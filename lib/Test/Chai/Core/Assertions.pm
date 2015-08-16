@@ -6,6 +6,8 @@ use utf8;
 sub Assertion { 'Test::Chai::Assertion' }
 sub Util      { 'Test::Chai::Util'      }
 
+sub flag { Util->flag(@_) }
+
 do {
     Assertion->add_property($_, sub { shift })
 } for qw/
@@ -204,5 +206,52 @@ my $empty = sub {
 };
 
 Assertion->add_property('empty', $empty);
+
+# -----------------------------------------------------------------------------------
+
+my $assert_equal = sub {
+    my ($self, $val, $msg) = @_;
+
+    $msg = Util->flag($self, 'message', $msg) if defined $msg;
+    my $obj = Util->flag($self, 'object');
+
+    if (Util->flag($self, 'deep')) {
+        return $self->eql($val);
+    }
+
+    else {
+        $self->assert(
+            $val eq $obj,
+            'expected #{this} to equal #{exp}',
+            'expected #{this} to not equal #{exp}',
+            $val,
+            $self->_obj,
+            1
+        );
+    }
+};
+
+Assertion->add_method('equal',  $assert_equal);
+Assertion->add_method('equals', $assert_equal);
+Assertion->add_method('eq',     $assert_equal);
+
+# -----------------------------------------------------------------------------------
+
+my $assert_eql = sub {
+    my ($self, $obj, $msg) = @_;
+
+    flag($self, 'message', $msg) if defined $msg;
+    $self->assert(
+        Util->eql($obj, Util->flag($self, 'object')),
+        'expected #{this} to deeply equal #{exp}',
+        'expected #{this} to not deeply equal #{exp}',
+        $obj,
+        $self->_obj,
+        1
+    );
+};
+
+Assertion->add_method('eql',  $assert_equal);
+Assertion->add_method('eqls', $assert_equal);
 
 1;
