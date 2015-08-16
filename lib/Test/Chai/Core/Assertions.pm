@@ -184,7 +184,7 @@ Assertion->add_property('exist', sub {
 
 # -----------------------------------------------------------------------------------
 
-my $empty = sub {
+sub empty {
     my ($self) = @_;
 
     $self->assert(
@@ -192,13 +192,13 @@ my $empty = sub {
         'expected #{this} to exist',
         'expected #{this} to not exist'
     );
-};
+}
 
-Assertion->add_property('empty', $empty);
+Assertion->add_property('empty', \&empty);
 
 # -----------------------------------------------------------------------------------
 
-my $assert_equal = sub {
+sub assert_equal {
     my ($self, $val, $msg) = @_;
 
     $msg = flag($self, 'message', $msg) if defined $msg;
@@ -219,19 +219,19 @@ my $assert_equal = sub {
         $self->_obj,
         1
     );
-};
+}
 
-Assertion->add_method('equal',  $assert_equal);
-Assertion->add_method('equals', $assert_equal);
-Assertion->add_method('eq',     $assert_equal);
+Assertion->add_method('equal',  \&assert_equal);
+Assertion->add_method('equals', \&assert_equal);
+Assertion->add_method('eq',     \&assert_equal);
 
 # -----------------------------------------------------------------------------------
 
-my $assert_eql = sub {
+sub assert_eql {
     my ($self, $obj, $msg) = @_;
 
     flag($self, 'message', $msg) if defined $msg;
-    $self->assert(
+    return $self->assert(
         Util->eql($obj, flag($self, 'object')),
         'expected #{this} to deeply equal #{exp}',
         'expected #{this} to not deeply equal #{exp}',
@@ -239,22 +239,22 @@ my $assert_eql = sub {
         $self->_obj,
         1
     );
-};
+}
 
-Assertion->add_method('eql',  $assert_equal);
-Assertion->add_method('eqls', $assert_equal);
+Assertion->add_method('eql',  \&assert_eql);
+Assertion->add_method('eqls', \&assert_eql);
 
 # -----------------------------------------------------------------------------------
 
 sub assert_above {
     my ($self, $n, $msg) = @_;
 
-    flag($self, 'message', $msg);
+    flag($self, 'message', $msg) if defined $msg;
     my $obj = flag($self, 'object');
 
     if (flag($self, 'do_length')) {
         my $len = Util->length($obj);
-        $self->assert(
+        return $self->assert(
             $len > $n,
             'expected #{this} to have a length above #{exp} but got #{act}',
             'expected #{this} to not have a length above #{exp}',
@@ -264,13 +264,13 @@ sub assert_above {
     }
 
     else {
-        $self->assert(
+        return $self->assert(
             $obj > $n,
             'expected #{this} to be above ' . $n,
             'expected #{this} to be at most ' . $n
         );
     }
-};
+}
 
 Assertion->add_method('above',        \&assert_above);
 Assertion->add_method('gt',           \&assert_above);
@@ -286,7 +286,7 @@ sub assert_least {
 
     if (flag($self, 'do_length')) {
         my $len = Util->length($obj);
-        $self->assert(
+        return $self->assert(
             $len >= $n,
             'expected #{this} to have a length a least #{exp} but got #{act}',
             'expected #{this} to not have a length bellow #{exp}',
@@ -296,7 +296,7 @@ sub assert_least {
     }
 
     else {
-        $self->assert(
+        return $self->assert(
             $obj >= $n,
             'expected #{this} to be at least ' . $n,
             'expected #{this} to be below ' . $n
@@ -341,5 +341,85 @@ sub within {
 
 Assertion->add_method('within', \&within);
 
+# -----------------------------------------------------------------------------------
+
+# FIXME: instanceof
+
+# -----------------------------------------------------------------------------------
+
+# sub property {
+#     my ($self, $val, $msg) = @_;
+#
+#     flag($self, 'message', $msg) if defined $msg;
+#
+#     my $is_deep    = !!flag($self, 'deep');
+#     my $descripter = $is_deep ? 'deep property ' : 'property ';
+#     my $negate     = flag($self, 'negate');
+#     my $obj        = flag($self, 'object');
+# }
+#
+# Assertion->add_method('property', \&property);
+
+# -----------------------------------------------------------------------------------
+
+sub assert_length_chain {
+    flag(shift, 'do_length', 1);
+}
+
+sub assert_length {
+    my ($self, $n, $msg) = @_;
+
+    flag($self, 'message', $msg) if defined $msg;
+    my $obj = flag($self, 'object');
+    my $len = Util->length($obj);
+
+    return $self->assert(
+        $len == $n,
+        'expected #{this} to have a length of #{exp} but got #{act}',
+        'expected #{this} to not have a length of #{act}',
+        $n,
+        $len
+    );
+}
+
+Assertion->add_chainable_method('length', \&assert_length, \&assert_length_chain);
+Assertion->add_method('length_of', \&assert_length);
+
+# -----------------------------------------------------------------------------------
+
+sub assert_match {
+    my ($self, $re, $msg) = @_;
+
+    flag($self, 'message', $msg) if defined $msg;
+    my $obj = flag($self, 'object');
+
+    return $self->assert(
+        $obj =~ $re,
+        'expected #{this} to match ' . $re,
+        'expected #{this} not to match ' . $re
+    );
+}
+
+Assertion->add_method('match', \&assert_match);
+Assertion->add_method('matchs', \&assert_match);
+
+# -----------------------------------------------------------------------------------
+
+sub assert_string {
+    my ($self, $str, $msg) = @_;
+
+    flag($self, 'message', $msg) if defined $msg;
+    my $obj = flag($self, 'object');
+
+    Assertion->new->($obj, $msg)->is->a('Str');
+
+    return $self->assert(
+        index($obj, $str) > -1,
+        'expected #{this} to contain ' . $str, # FIXME inspect
+        'expected #{this} to not contain ' . $str
+    );
+}
+
+Assertion->add_method('string', \&assert_string);
 
 1;

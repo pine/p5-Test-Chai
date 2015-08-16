@@ -114,9 +114,8 @@ subtest expect => sub {
         ok expect(5)->to->be->within(3, 6);
         ok expect(5)->to->be->within(3, 5);
         ok expect(5)->to->not->be->within(1, 3);
-
-        # FIXME length
-        # ok expect('foo')->to->
+        ok expect('foo')->to->have->length->within(2, 4);
+        ok expect([ 1, 2, 3 ])->to->have->length->within(2, 4);
 
         err {
             ok not expect(5)->to->not->be->within(4, 6);
@@ -125,19 +124,82 @@ subtest expect => sub {
         err {
             ok not expect(10)->to->be->within(50, 100);
         };
+
+        err {
+            ok not expect([ 1, 2, 3 ])->to->have->length->within(5, 7);
+        };
     };
 
+    subtest 'above(n)' => sub {
+        ok expect(5)->to->be->above(2);
+        ok expect(5)->to->be->greater_than(2);
+        ok expect(5)->to->not->be->above(5);
+        ok expect(5)->to->not->be->above(6);
+        ok expect('foo')->to->have->length->above(2);
 
-    # expect(10)->to->be->a('Int');
-    # expect('abc')->to->be->a('Str');
-    # expect(0)->to->not->be->ok;
-    # expect(1)->to->not->be->undef;
-    # expect('NaN')->to->be->NaN;
-    # expect([1,2,3])->to->include(3);
-    # expect([])->to->be->empty;
-    # expect('abc')->to->equal('abc');
-    # expect([])->to->be->empty;
-    # expect(10)->to->be->above(5);
+        err {
+            ok not expect(5)->to->be->above(6);
+        };
+
+        err {
+            ok not expect(10)->to->not->be->above(6);
+        };
+
+        err {
+            ok not expect('foo')->to->have->length->above(4);
+        };
+
+        err {
+            ok not expect([ 1, 2, 3 ])->to->have->length->above(4);
+        };
+    };
+
+    subtest 'least(n)' => sub {
+        ok expect(5)->to->be->at->least(2);
+        ok expect(5)->to->be->at->least(5);
+        ok expect(5)->to->not->be->at->least(6);
+        ok expect('foo')->to->have->length->of->at->least(2);
+        ok expect([ 1, 2, 3 ])->to->have->length->of->at->least(2);
+
+        err {
+            ok not expect(5)->to->be->at->least(6);
+        };
+
+        err {
+            ok not expect(10)->to->not->be->at->least(6);
+        };
+
+        err {
+            ok not expect('foo')->to->have->length->of->at->least(4);
+        };
+
+        err {
+            ok not expect([ 1, 2, 3, 4 ])->to->not->have->length->of->at->least(4);
+        };
+    };
+
+    # FIXME below
+    # FIXME most
+    # FIXME match
+
+    subtest 'length(n)' => sub {
+        ok expect('test')->to->have->length(4);
+        ok expect('test')->to->not->have->length(3);
+        ok expect([ 1, 2, 3 ])->to->have->length(3);
+
+        err {
+            ok not expect(4)->to->have->length(3);
+        };
+
+        err {
+            ok not expect('asd')->to->not->have->length(3);
+        };
+    };
+
+    subtest eql => sub {
+        expect('test')->to->eql('test');
+        expect({ foo => 'bar' })->to->eql({ foo => 'bar' });
+    };
 };
 
 done_testing;

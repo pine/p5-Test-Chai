@@ -5,6 +5,7 @@ use utf8;
 
 use Mouse::Util::TypeConstraints ();
 use Test::Deep::NoTest;
+# use Scalar::Util qw/blessed/;
 use DDP;
 
 sub test {
@@ -75,7 +76,12 @@ sub flag {
 
 sub eql {
     my $class = shift;
-    return eql_deeply(@_);
+    return eq_deeply(@_);
+}
+
+sub has_property {
+    my ($class, $name, $obj) = @_;
+    # return blessed($obj) && $obj->can($name);
 }
 
 sub add_property {
@@ -138,15 +144,15 @@ sub add_chainable_method {
 sub length {
     my ($class, $obj) = @_;
 
-    if ($obj eq 'ARRAY') {
+    if (ref $obj eq 'ARRAY') {
         return scalar @$obj;
     }
 
-    elsif ($obj eq 'HASH') {
+    elsif (ref $obj eq 'HASH') {
         return scalar keys %$obj;
     }
 
-    return length $obj == 0;
+    return length $obj;
 }
 
 1;
