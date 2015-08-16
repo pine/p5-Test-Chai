@@ -246,7 +246,7 @@ Assertion->add_method('eqls', $assert_equal);
 
 # -----------------------------------------------------------------------------------
 
-my $assert_above = sub {
+sub assert_above {
     my ($self, $n, $msg) = @_;
 
     flag($self, 'message', $msg);
@@ -272,13 +272,13 @@ my $assert_above = sub {
     }
 };
 
-Assertion->add_method('above',        $assert_above);
-Assertion->add_method('gt',           $assert_above);
-Assertion->add_method('greater_than', $assert_above);
+Assertion->add_method('above',        \&assert_above);
+Assertion->add_method('gt',           \&assert_above);
+Assertion->add_method('greater_than', \&assert_above);
 
 # -----------------------------------------------------------------------------------
 
-my $assert_least = sub {
+sub assert_least {
     my ($self, $n, $msg) = @_;
 
     flag($self, 'message', $msg);
@@ -302,7 +302,10 @@ my $assert_least = sub {
             'expected #{this} to be below ' . $n
         );
     }
-};
+}
+
+Assertion->add_method('least', \&assert_least);
+Assertion->add_method('gte',   \&assert_least);
 
 # -----------------------------------------------------------------------------------
 
@@ -311,7 +314,7 @@ my $assert_least = sub {
 
 # -----------------------------------------------------------------------------------
 
-Assertion->add_method('within', sub {
+sub within {
     my ($self, $start, $finish, $msg) = @_;
 
     flag($self, 'message', $msg) if defined $msg;
@@ -334,6 +337,9 @@ Assertion->add_method('within', sub {
             'expected #{this} to not be within ' . $range
         );
    }
-});
+}
+
+Assertion->add_method('within', \&within);
+
 
 1;
