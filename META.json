@@ -1,12 +1,12 @@
 {
-   "abstract" : "It's new $module",
+   "abstract" : "BDD / TDD assertion framework for Perl that can be paired with any testing framework",
    "author" : [
-      "Pine Mizune <pinemz@gmail.com>"
+      "Pine Mizune"
    ],
    "dynamic_config" : 0,
    "generated_by" : "Minilla/v2.5.0, CPAN::Meta::Converter version 2.150005",
    "license" : [
-      "perl_5"
+      "unknown"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
@@ -42,7 +42,9 @@
       },
       "runtime" : {
          "requires" : {
-            "perl" : "5.008001"
+            "Mouse::Util::TypeConstraints" : "0",
+            "Test::Deep::NoTest" : "0",
+            "perl" : "5.010000"
          }
       },
       "test" : {
@@ -52,7 +54,21 @@
       }
    },
    "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/pine613/p5-Test-Chai/issues"
+      },
+      "homepage" : "https://github.com/pine613/p5-Test-Chai",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/pine613/p5-Test-Chai.git",
+         "web" : "https://github.com/pine613/p5-Test-Chai"
+      }
+   },
    "version" : "0.01",
    "x_authority" : "cpan:PINE",
+   "x_contributors" : [
+      "Pine Mizune <pinemz@gmail.com>"
+   ],
    "x_serialization_backend" : "JSON::PP version 2.27203"
 }
