@@ -8,13 +8,13 @@ use parent qw/Test::Builder::Module/;
 use Test::Chai::AssertionError;
 use Test::Chai::Config;
 
-sub Util   { 'Test::Chai::Util' }
-sub Config { 'Test::Chai::Config' }
-sub AssertionError { 'Test::Chai::AssertionError' }
+# alias
+sub Util ()           { 'Test::Chai::Util'           }
+sub Config ()         { 'Test::Chai::Config'         }
+sub AssertionError () { 'Test::Chai::AssertionError' }
 
 sub flag { Util->flag(@_) }
 
-my $CLASS = __PACKAGE__;
 
 sub new {
     my ($class, $obj, $msg, $stack) = @_;
@@ -23,7 +23,7 @@ sub new {
     bless $self => $class;
 
     # Util->flag($self, 'ssfi' FIXME
-    Util->flag($self, 'object', $obj);
+    Util->flag($self, 'object',  $obj);
     Util->flag($self, 'message', $msg);
 
     return $self;
@@ -71,14 +71,14 @@ sub assert {
 sub fail {
     my ($class, $msg) = @_;
 
-    my $tb = $CLASS->builder;
+    my $tb = $class->builder;
     return $tb->ok(0, $msg);
 }
 
 sub pass {
     my ($class, $msg) = @_;
 
-    my $tb = $CLASS->builder;
+    my $tb = $class->builder;
     return $tb->ok(1, $msg);
 }
 

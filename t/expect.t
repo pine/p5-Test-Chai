@@ -197,8 +197,14 @@ subtest expect => sub {
     };
 
     subtest eql => sub {
-        expect('test')->to->eql('test');
-        expect({ foo => 'bar' })->to->eql({ foo => 'bar' });
+        ok expect('test')->to->eql('test');
+        ok expect({ foo => 'bar' })->to->eql({ foo => 'bar' });
+        ok expect(1)->to->eql(1);
+        ok expect('4')->to->eql(4);
+
+        err {
+            expect(4)->to->eql(3);
+        };
     };
 };
 
