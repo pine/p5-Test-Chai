@@ -12,6 +12,9 @@ before_script:
   - cpanm --quiet --notest --skip-satisfied Devel::Cover Devel::Cover::Report::Codecov
 
 script:
-  - prove -r t
   - HARNESS_PERL_SWITCHES="-MDevel::Cover=+ignore,^local/|^t/" prove -r t
   - cover -report codecov
+
+notifications:
+  slack:
+    secure: "k1YWxeZsUHrwopPjEQ/um83ZHR6k7XyHs+L9KTKHBQfa7B6PBBCp7FrFbVmGDOv7rNDqqeFB0BjyFhjAUw9tygBiyQ3VZpBO5wsTMlMAKaKo93xlXyp+jNDx6I9YAD5HRR2BY72FPwFTtN7Coau33UVJAF703T919cBF2zvUakRTdrsqZT1L/NP/KjuD+xI0PZesNsQZQvZMRhGxaMV6Wt6c+lliDKDt9KPNboAW8hUKqbiwiaIezjQqeh4Rd7xBTkulgQLbu1RnE43f3iUQGjneJzr6JXw4q4yvpMRLmG2I3XEyqcTLFMPJ672jA1A78nO84y2oBOR94nLHvQMSHlNPMirShhCGlMTnIb7x4q76qPRKUm1dz6vFqo83UPm3V6RS3cfn6eItXL3gzGSwKBZgUKwdjkxlUcpzG0c8dtzFGkCwFh89DohZv5Da18wIBOtCltE6M9qz923DGNmnzxj1qgIYkfBJCRy5pKenOZDCFezyZPlZHRO9eYfu8p45EXMEp2GKChP+rcI3cNs2HQtc81m/lychBJXU4H1ch2f4x2Pg814G9Jm1ufSqakom7Dq3sN96kzMSvGG/HgBsN8gfGLNRTduHUBcDyUBLKYH12Y6Y0SBI4adUQPwp8OCnyiHRI8L4D6ftOGrCHHIWyWnVqgokRQE4wBF8HzQUwMM="
