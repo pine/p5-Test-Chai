@@ -16,7 +16,9 @@ sub err (&;&$) {
     });
 
     $code->();
-    cmp_ok $guard->call_count('Test::Chai::Assertion', '_fail'), '>', 0;
+    cmp_ok
+        $guard->call_count('Test::Chai::Assertion', '_fail'), '>', 0,
+        'expected test failed';
 }
 
 subtest expect => sub {
@@ -203,8 +205,49 @@ subtest expect => sub {
         ok expect('4')->to->eql(4);
 
         err {
-            expect(4)->to->eql(3);
+            ok not expect(4)->to->eql(3);
         };
+    };
+
+    subtest 'equal(val)' => sub {
+        ok expect('test')->to->equal('test');
+        ok expect(1)->to->equal(1);
+        ok expect('4')->to->equal(4);
+
+        err {
+            ok not expect(4)->to->equal(3);
+        };
+    };
+
+    subtest 'deep.equal(val)' => sub {
+        ok expect({ foo => 'bar' })->to->deep->equal({ foo => 'bar' });
+        ok expect({ foo => 'bar' })->not->to->deep->equal({ foo => 'baz' });
+    };
+
+    subtest 'deep.equal(/regexp/)' => sub {
+        ok expect(qr/a/)->to->deep->equal(qr/a/);
+        ok expect(qr/a/)->not->to->deep->equal(qr/b/);
+        ok expect(qr/a/)->not->to->deep->equal({});
+        ok expect(qr/a/m)->to->deep->equal(qr/a/m);
+        ok expect(qr/a/m)->not->to->deep->equal(qr/b/m);
+    };
+
+    # FIXME deep.equal(Date)
+
+    subtest empty => sub {
+        ok expect('')->to->be->empty;
+        ok expect('foo')->not->to->be->empty;
+        ok expect([])->to->be->empty;
+        ok expect(['foo'])->not->to->be->empty;
+        ok expect({})->to->be->empty;
+        ok expect({ foo => 'bar' })->not->to->be->empty;
+
+        err { ok not expect('')->not->to->be->empty };
+        err { ok not expect('foo')->to->be->empty };
+        err { ok not expect([])->not->to->be->empty };
+        err { ok not expect(['foo'])->to->be->empty };
+        err { ok not expect({})->not->to->be->empty };
+        err { ok not expect({ foo => 'bar' })->to->be->empty };
     };
 };
 

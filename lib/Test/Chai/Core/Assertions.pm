@@ -5,8 +5,8 @@ use utf8;
 
 use Scalar::Util qw/looks_like_number/;
 
-sub Assertion () { 'Test::Chai::Assertion' }
 sub Util ()      { 'Test::Chai::Util'      }
+sub Assertion () { 'Test::Chai::Assertion' }
 
 sub flag { Util->flag(@_) }
 
@@ -178,7 +178,7 @@ Assertion->add_property('undefined', \&assert_undef);
 
 sub assert_nan {
     my $self = shift;
-    $self->assert(
+    return $self->assert(
         'NaN' eq flag($self, 'object'),
         'expected #{this} to be NaN',
         'expected #{this} to be NaN'
@@ -191,7 +191,7 @@ Assertion->add_property('NaN', \&assert_nan);
 
 sub assert_exist {
     my $self = shift;
-    $self->assert(
+    return $self->assert(
         defined flag($self, 'object'),
         'expected #{this} to exist',
         'expected #{this} to not exist'
@@ -204,8 +204,7 @@ Assertion->add_property('exist', \&assert_exist);
 
 sub assert_empty {
     my ($self) = @_;
-
-    $self->assert(
+    return $self->assert(
         Util->length(flag($self, 'object')) == 0,
         'expected #{this} to exist',
         'expected #{this} to not exist'
@@ -439,5 +438,93 @@ sub assert_string {
 }
 
 Assertion->add_method('string', \&assert_string);
+
+# -----------------------------------------------------------------------------------
+
+# FIXME keys
+# FIXME throws
+# FIXME respondTo
+
+# -----------------------------------------------------------------------------------
+
+Assertion->add_property('itself', sub {
+    flag(shift, 'itself', 1);
+});
+
+# -----------------------------------------------------------------------------------
+
+sub assert_satisfy {
+    my ($self, $matcher, $msg) = @_;
+
+    flag($self, 'message', $msg) if defined $msg;
+    my $obj    = flag($self, 'object');
+    my $negate = flag($self, 'negate');
+    my $result = $matcher->($obj);
+
+    return $self->assert(
+        $result,
+        'expected #{this} to satisfy ' . Util->obj_display($matcher),
+        'expected #{this} to not satisfy' . Util->obj_display($matcher),
+        $negate ? 0 : 1,
+        $result
+    );
+}
+
+Assertion->add_method('satisfy',   \&assert_satisfy);
+Assertion->add_method('satisfies', \&assert_satisfy);
+
+# -----------------------------------------------------------------------------------
+
+# FIXME closeTo
+# FIXME members
+# FIXME change
+
+# -----------------------------------------------------------------------------------
+
+sub assert_increases {
+    my ($self, $object, $prop, $msg) = @_;
+
+    flag($self, 'message', $msg) if defined $msg;
+    my $fn = flag($self, 'object');
+
+    # Assertion->new->($obj, $msg)->to->have->property # FIXME
+    Assertion->new($fn)->is->a('CodeRef');
+
+    my $initial = $object->{$prop};
+    $fn->();
+
+    return $self->assert(
+        $object->{$prop} - $initial > 0,
+        'expected .' . $prop . ' to increase',
+        'expected .' . $prop . ' to not increase'
+    );
+}
+
+Assertion->add_chainable_method('increase',  \&assert_increases);
+Assertion->add_chainable_method('increases', \&assert_increases);
+
+# -----------------------------------------------------------------------------------
+
+sub assert_decreases {
+    my ($self, $object, $prop, $msg) = @_;
+
+    flag($self, 'message', $msg) if defined $msg;
+    my $fn = flag($self, 'object');
+
+    # Assertion->new->($obj, $msg)->to->have->property # FIXME
+    Assertion->new($fn)->is->a('CodeRef');
+
+    my $initial = $object->{$prop};
+    $fn->();
+
+    return $self->assert(
+        $object->{$prop} - $initial < 0,
+        'expected .' . $prop . ' to decrease',
+        'expected .' . $prop . ' to not decrease'
+    );
+}
+
+Assertion->add_chainable_method('decrease',  \&assert_decreases);
+Assertion->add_chainable_method('decreases', \&assert_decreases);
 
 1;
