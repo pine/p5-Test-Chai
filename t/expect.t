@@ -11,11 +11,6 @@ sub err (&;&$) {
     my $guard = mock_guard('Test::Chai::Assertion', {
         fail => sub {
             my ($class, $err) = @_;
-
-            if (defined $msg) {
-                is $class->message, $msg;
-            }
-
             return 0;
         }
     });

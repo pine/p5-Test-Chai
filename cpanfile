@@ -9,7 +9,8 @@ requires 'DDP';
 requires 'Mouse::Util::TypeConstraints';
 
 on 'test' => sub {
+    requires 'Module::Find', '0.13';
     requires 'Test::More', '0.98';
-requires 'Test::Mock::Guard';
+    requires 'Test::Mock::Guard';
 };
 
