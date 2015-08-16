@@ -42,13 +42,18 @@
       },
       "runtime" : {
          "requires" : {
+            "DDP" : "0",
+            "Data::Structure::Util" : "0",
             "Mouse::Util::TypeConstraints" : "0",
+            "Scalar::Util" : "0",
             "Test::Deep::NoTest" : "0",
             "perl" : "5.010000"
          }
       },
       "test" : {
          "requires" : {
+            "Module::Find" : "0.13",
+            "Test::Mock::Guard" : "0",
             "Test::More" : "0.98"
          }
       }
