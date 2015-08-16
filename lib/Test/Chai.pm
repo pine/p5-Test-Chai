@@ -38,7 +38,7 @@ Test::Chai - BDD / TDD assertion framework for Perl that can be paired with any 
 
 =head1 DESCRIPTION
 
-Test::Chai is BDD / TDD assertion framework inspired by [Chai](http://chaijs.com/) written by JavaScript.
+Test::Chai is BDD / TDD assertion framework inspired by L<Chai|http://chaijs.com/> written by JavaScript.
 
 =head1 LICENSE
 
