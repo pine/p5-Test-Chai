@@ -5,8 +5,8 @@ use utf8;
 
 use parent qw/Test::Builder::Module/;
 
-use Test::Chai::AssertionError;
 use Test::Chai::Config;
+use Test::Chai::AssertionError;
 
 # alias
 sub Util ()           { 'Test::Chai::Util'           }
@@ -29,17 +29,9 @@ sub new {
     return $self;
 }
 
-sub add_property {
-    Util->add_property(@_);
-}
-
-sub add_method {
-    Util->add_method(@_);
-}
-
-sub add_chainable_method {
-    Util->add_chainable_method(@_);
-}
+sub add_property         { Util->add_property(@_)         }
+sub add_method           { Util->add_method(@_)           }
+sub add_chainable_method { Util->add_chainable_method(@_) }
 
 sub assert {
     my $self = shift;
@@ -59,23 +51,23 @@ sub assert {
             show_diff => $show_diff,
         }, undef);
 
-        return $self->fail($err->message);
+        return $self->_fail($err->message);
     }
 
     else {
         my $msg = Util->get_message($self, [@_]);
-        return $self->pass($msg);
+        return $self->_pass($msg);
     }
 }
 
-sub fail {
+sub _fail {
     my ($class, $msg) = @_;
 
     my $tb = $class->builder;
     return $tb->ok(0, $msg);
 }
 
-sub pass {
+sub _pass {
     my ($class, $msg) = @_;
 
     my $tb = $class->builder;

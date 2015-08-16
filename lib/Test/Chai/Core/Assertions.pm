@@ -5,10 +5,12 @@ use utf8;
 
 use Scalar::Util qw/looks_like_number/;
 
-sub Assertion { 'Test::Chai::Assertion' }
-sub Util      { 'Test::Chai::Util'      }
+sub Assertion () { 'Test::Chai::Assertion' }
+sub Util ()      { 'Test::Chai::Util'      }
 
 sub flag { Util->flag(@_) }
+
+# -----------------------------------------------------------------------------------
 
 do {
     Assertion->add_property($_, sub { shift })
@@ -18,6 +20,8 @@ do {
     with that which at
     of same
 /;
+
+# -----------------------------------------------------------------------------------
 
 Assertion->add_property('not', sub {
     flag(shift, 'negate', 1);
@@ -37,7 +41,9 @@ Assertion->add_property('all', sub {
     flag(shift, 'any', 1);
 });
 
-my $an = sub {
+# -----------------------------------------------------------------------------------
+
+sub assert_an {
     my ($self, $type, $msg) = @_;
 
     flag($self, 'message', $msg) if defined $msg;
@@ -50,18 +56,18 @@ my $an = sub {
         'expected #{this} to be ' . $article . $type,
         'expected #{this} not to be ' . $article . $type
     );
-};
+}
 
-Assertion->add_chainable_method('an', $an);
-Assertion->add_chainable_method('a',  $an);
+Assertion->add_chainable_method('an', \&assert_an);
+Assertion->add_chainable_method('a',  \&assert_an);
 
 # -----------------------------------------------------------------------------------
 
-my $include_chaining_behavior = sub {
+sub include_chaining_behavior {
     flag(shift, 'contains', 1);
-};
+}
 
-my $include = sub {
+sub include {
     my ($self, $val, $msg) = @_;
 
     flag($self, 'message', $msg) if defined $msg;
@@ -105,16 +111,16 @@ my $include = sub {
         'expected #{this} to include ' . $val, # FIXME
         'expected #{this} to not include ' . $val
     );
-};
+}
 
-Assertion->add_chainable_method('include',  $include, $include_chaining_behavior);
-Assertion->add_chainable_method('includes', $include, $include_chaining_behavior);
-Assertion->add_chainable_method('contain',  $include, $include_chaining_behavior);
-Assertion->add_chainable_method('contains', $include, $include_chaining_behavior);
+Assertion->add_chainable_method('include',  \&include, \&include_chaining_behavior);
+Assertion->add_chainable_method('includes', \&include, \&include_chaining_behavior);
+Assertion->add_chainable_method('contain',  \&include, \&include_chaining_behavior);
+Assertion->add_chainable_method('contains', \&include, \&include_chaining_behavior);
 
 # -----------------------------------------------------------------------------------
 
-Assertion->add_property('ok', sub {
+sub assert_ok {
     my $self = shift;
     my $obj  = flag($self, 'object');
     return $self->assert(
@@ -122,11 +128,13 @@ Assertion->add_property('ok', sub {
         'expected #{this} to be truthy',
         'expected #{this} to be falsy'
     );
-});
+}
+
+Assertion->add_property('ok', \&assert_ok);
 
 # -----------------------------------------------------------------------------------
 
-Assertion->add_property('true', sub {
+sub assert_true {
     my $self = shift;
     my $obj  = flag($self, 'object');
     return $self->assert(
@@ -134,9 +142,13 @@ Assertion->add_property('true', sub {
         'expected #{this} to be 1',
         'expected #{this} to be 0'
     );
-});
+}
 
-Assertion->add_property('false', sub {
+Assertion->add_property('true', \&assert_true);
+
+# -----------------------------------------------------------------------------------
+
+sub assert_false {
     my $self = shift;
     my $obj  = flag($self, 'object');
     return $self->assert(
@@ -144,32 +156,36 @@ Assertion->add_property('false', sub {
         'expected #{this} to be 0',
         'expected #{this} to be 1'
     );
-});
+}
+
+Assertion->add_property('false', \&assert_false);
 
 # -----------------------------------------------------------------------------------
 
-my $undef = sub {
+sub assert_undef {
     my $self = shift;
     return $self->assert(
         !defined flag($self, 'object'),
         'expected #{this} to be undef',
         'expected #{this} not to be undef'
     );
-};
+}
 
-Assertion->add_property('undef',     $undef);
-Assertion->add_property('undefined', $undef);
+Assertion->add_property('undef',     \&assert_undef);
+Assertion->add_property('undefined', \&assert_undef);
 
 # -----------------------------------------------------------------------------------
 
-Assertion->add_property('NaN', sub {
+sub assert_nan {
     my $self = shift;
     $self->assert(
         'NaN' eq flag($self, 'object'),
         'expected #{this} to be NaN',
         'expected #{this} to be NaN'
     );
-});
+}
+
+Assertion->add_property('NaN', \&assert_nan);
 
 # -----------------------------------------------------------------------------------
 
@@ -186,7 +202,7 @@ Assertion->add_property('exist', \&assert_exist);
 
 # -----------------------------------------------------------------------------------
 
-sub empty {
+sub assert_empty {
     my ($self) = @_;
 
     $self->assert(
@@ -196,7 +212,7 @@ sub empty {
     );
 }
 
-Assertion->add_property('empty', \&empty);
+Assertion->add_property('empty', \&assert_empty);
 
 # -----------------------------------------------------------------------------------
 

@@ -9,14 +9,14 @@ sub err (&;&$) {
     my ($code, $msg) = @_;
 
     my $guard = mock_guard('Test::Chai::Assertion', {
-        fail => sub {
+        _fail => sub {
             my ($class, $err) = @_;
             return 0;
         }
     });
 
     $code->();
-    cmp_ok $guard->call_count('Test::Chai::Assertion', 'fail'), '>', 0;
+    cmp_ok $guard->call_count('Test::Chai::Assertion', '_fail'), '>', 0;
 }
 
 subtest expect => sub {
