@@ -13,6 +13,8 @@ before_script:
 
 script:
   - HARNESS_PERL_SWITCHES="-MDevel::Cover=+ignore,^local/|^t/" prove -r t
+
+after_success:
   - cover -report codecov
 
 notifications:

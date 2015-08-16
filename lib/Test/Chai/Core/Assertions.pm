@@ -173,14 +173,16 @@ Assertion->add_property('NaN', sub {
 
 # -----------------------------------------------------------------------------------
 
-Assertion->add_property('exist', sub {
+sub assert_exist {
     my $self = shift;
     $self->assert(
         defined flag($self, 'object'),
         'expected #{this} to exist',
         'expected #{this} to not exist'
     );
-});
+}
+
+Assertion->add_property('exist', \&assert_exist);
 
 # -----------------------------------------------------------------------------------
 
