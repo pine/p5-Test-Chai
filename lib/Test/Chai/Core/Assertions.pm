@@ -5,6 +5,7 @@ use utf8;
 
 use Scalar::Util qw/looks_like_number/;
 
+
 sub Util ()      { 'Test::Chai::Util'      }
 sub Assertion () { 'Test::Chai::Assertion' }
 
@@ -441,7 +442,11 @@ Assertion->add_method('string', \&assert_string);
 
 # -----------------------------------------------------------------------------------
 
-# FIXME keys
+use Test::Chai::Core::Assertions::Keys qw/assert_keys/;
+
+Assertion->add_method('keys', \&assert_keys);
+Assertion->add_method('key',  \&assert_keys);
+
 # FIXME throws
 # FIXME respondTo
 

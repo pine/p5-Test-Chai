@@ -40,60 +40,50 @@ subtest expect => sub {
         ok expect(1)->to->be->true;
         ok expect(0)->to->not->be->true;
 
-        err {
-            ok not expect('test')->to->be->true;
-        };
+        err { ok not expect('test')->to->be->true };
     };
 
     subtest ok => sub {
         ok expect(1)->to->be->ok;
         ok expect(0)->to->not->be->ok;
 
-        err {
-            ok not expect('')->to->be->ok;
-        };
-
-        err {
-            ok not expect('test')->to->not->be->ok;
-        };
+        err { ok not expect('')->to->be->ok };
+        err { ok not expect('test')->to->not->be->ok };
     };
 
     subtest false => sub {
         ok expect(0)->to->be->false;
         ok expect(1)->to->not->be->false;
 
-        err {
-            ok not expect('')->to->be->false;
-        };
+        err { ok not expect('')->to->be->false };
     };
 
     subtest undef => sub {
         ok expect(undef)->to->be->undef;
         ok expect(0)->to->not->be->undef;
 
-        err {
-            ok not expect('')->to->be->undef;
-        };
+        err { ok not expect('')->to->be->undef };
     };
 
-    # FIXME
-    # subtest exists
+    subtest exist => sub {
+        my $foo = 'bar';
+        my $bar;
+
+        ok expect($foo)->to->exist;
+        ok expect($bar)->to->not->exist;
+    };
 
     subtest equal => sub {
         my $foo;
         ok expect(undef)->to->equal($foo);
 
-        err {
-            ok not expect(undef)->to->equal(0);
-        };
+        err { ok not expect(undef)->to->equal(0) };
     };
 
     subtest typeof => sub {
         ok expect('test')->to->be->a('Str');
 
-        err {
-           ok not expect('test')->to->not->be->a('Str');
-        };
+        err { ok not expect('test')->to->not->be->a('Str') };
 
         ok expect(5)->to->be->a('Int');
         ok expect('5')->to->be->a('Int');
@@ -103,9 +93,7 @@ subtest expect => sub {
         ok expect(sub {})->to->be->a('CodeRef');
         ok expect(undef)->to->be->a('Undef');
 
-        err {
-            ok not expect(5)->to->not->be->a('Int');
-        };
+        err { ok not expect(5)->to->not->be->a('Int') };
     };
 
     # FIXME
@@ -119,17 +107,9 @@ subtest expect => sub {
         ok expect('foo')->to->have->length->within(2, 4);
         ok expect([ 1, 2, 3 ])->to->have->length->within(2, 4);
 
-        err {
-            ok not expect(5)->to->not->be->within(4, 6);
-        };
-
-        err {
-            ok not expect(10)->to->be->within(50, 100);
-        };
-
-        err {
-            ok not expect([ 1, 2, 3 ])->to->have->length->within(5, 7);
-        };
+        err { ok not expect(5)->to->not->be->within(4, 6) };
+        err { ok not expect(10)->to->be->within(50, 100) };
+        err { ok not expect([ 1, 2, 3 ])->to->have->length->within(5, 7) };
     };
 
     subtest 'above(n)' => sub {
@@ -139,21 +119,10 @@ subtest expect => sub {
         ok expect(5)->to->not->be->above(6);
         ok expect('foo')->to->have->length->above(2);
 
-        err {
-            ok not expect(5)->to->be->above(6);
-        };
-
-        err {
-            ok not expect(10)->to->not->be->above(6);
-        };
-
-        err {
-            ok not expect('foo')->to->have->length->above(4);
-        };
-
-        err {
-            ok not expect([ 1, 2, 3 ])->to->have->length->above(4);
-        };
+        err { ok not expect(5)->to->be->above(6) };
+        err { ok not expect(10)->to->not->be->above(6) };
+        err { ok not expect('foo')->to->have->length->above(4) };
+        err { ok not expect([ 1, 2, 3 ])->to->have->length->above(4) };
     };
 
     subtest 'least(n)' => sub {
@@ -163,21 +132,10 @@ subtest expect => sub {
         ok expect('foo')->to->have->length->of->at->least(2);
         ok expect([ 1, 2, 3 ])->to->have->length->of->at->least(2);
 
-        err {
-            ok not expect(5)->to->be->at->least(6);
-        };
-
-        err {
-            ok not expect(10)->to->not->be->at->least(6);
-        };
-
-        err {
-            ok not expect('foo')->to->have->length->of->at->least(4);
-        };
-
-        err {
-            ok not expect([ 1, 2, 3, 4 ])->to->not->have->length->of->at->least(4);
-        };
+        err { ok not expect(5)->to->be->at->least(6) };
+        err { ok not expect(10)->to->not->be->at->least(6) };
+        err { ok not expect('foo')->to->have->length->of->at->least(4) };
+        err { ok not expect([ 1, 2, 3, 4 ])->to->not->have->length->of->at->least(4) };
     };
 
     # FIXME below
@@ -189,13 +147,8 @@ subtest expect => sub {
         ok expect('test')->to->not->have->length(3);
         ok expect([ 1, 2, 3 ])->to->have->length(3);
 
-        err {
-            ok not expect(4)->to->have->length(3);
-        };
-
-        err {
-            ok not expect('asd')->to->not->have->length(3);
-        };
+        err { ok not expect(4)->to->have->length(3) };
+        err { ok not expect('asd')->to->not->have->length(3) };
     };
 
     subtest eql => sub {
@@ -204,9 +157,7 @@ subtest expect => sub {
         ok expect(1)->to->eql(1);
         ok expect('4')->to->eql(4);
 
-        err {
-            ok not expect(4)->to->eql(3);
-        };
+        err { ok not expect(4)->to->eql(3) };
     };
 
     subtest 'equal(val)' => sub {
@@ -214,9 +165,7 @@ subtest expect => sub {
         ok expect(1)->to->equal(1);
         ok expect('4')->to->equal(4);
 
-        err {
-            ok not expect(4)->to->equal(3);
-        };
+        err { ok not expect(4)->to->equal(3) };
     };
 
     subtest 'deep.equal(val)' => sub {
@@ -248,6 +197,67 @@ subtest expect => sub {
         err { ok not expect(['foo'])->to->be->empty };
         err { ok not expect({})->not->to->be->empty };
         err { ok not expect({ foo => 'bar' })->to->be->empty };
+    };
+
+    # FIXME include
+
+    subtest 'keys(array|Object|arguments)' => sub {
+        ok expect({ foo => 1 })->to->have->keys([qw/foo/]);
+        ok expect({ foo => 1 })->have->keys({ foo => 6 });
+        ok expect({ foo => 1, bar => 2 })->to->have->keys([qw/foo bar/]);
+        ok expect({ foo => 1, bar => 2 })->to->have->keys(qw/foo bar/);
+        ok expect({ foo => 1, bar => 2 })->have->keys({ foo => 6, bar => 7 });
+        ok expect({ foo => 1, bar => 2, baz => 3 })->to->contain->keys(qw/foo bar/);
+        ok expect({ foo => 1, bar => 2, baz => 3 })->to->contain->keys(qw/bar foo/);
+        ok expect({ foo => 1, bar => 2, baz => 3 })->to->contain->keys(qw/baz/);
+        ok expect({ foo => 1, bar => 2 })->contain->keys({ foo => 6 });
+        ok expect({ foo => 1, bar => 2 })->contain->keys({ bar => 7 });
+        ok expect({ foo => 1, bar => 2 })->contain->keys({ foo => 6 });
+
+        ok expect({ foo => 1, bar => 2 })->to->contain->keys(qw/foo/);
+        ok expect({ foo => 1, bar => 2 })->to->contain->keys(qw/bar foo/);
+        ok expect({ foo => 1, bar => 2 })->to->contain->keys([qw/foo/]);
+        ok expect({ foo => 1, bar => 2 })->to->contain->keys([qw/bar/]);
+        ok expect({ foo => 1, bar => 2 })->to->contain->keys([qw/bar foo/]);
+        ok expect({ foo => 1, bar => 2, baz => 3 })->to->contain->all->keys([qw/bar foo/]);
+
+        ok expect({ foo => 1, bar => 2 })->to->not->have->keys('baz');
+        ok expect({ foo => 1, bar => 2 })->to->not->have->keys('foo', 'baz');
+        ok expect({ foo => 1, bar => 2 })->to->not->contain->keys('baz');
+        ok expect({ foo => 1, bar => 2 })->to->not->contain->keys('foo', 'baz');
+        ok expect({ foo => 1, bar => 2 })->to->not->contain->keys('baz', 'foo');
+
+        ok expect({ foo => 1, bar => 2 })->to->have->any->keys('foo', 'baz');
+        ok expect({ foo => 1, bar => 2 })->to->have->any->keys('foo');
+        ok expect({ foo => 1, bar => 2 })->to->contain->any->keys('bar', 'baz');
+        ok expect({ foo => 1, bar => 2 })->to->contain->any->keys(['foo']);
+        ok expect({ foo => 1, bar => 2 })->to->have->all->keys(['bar', 'foo']);
+        ok expect({ foo => 1, bar => 2 })->to->contain->all->keys(['bar', 'foo']);
+        ok expect({ foo => 1, bar => 2 })->contain->any->keys({ 'foo' => 6 });
+        ok expect({ foo => 1, bar => 2 })->have->all->keys({ 'foo' => 6, 'bar' => 7 });
+        ok expect({ foo => 1, bar => 2 })->contain->all->keys({ 'bar' => 7, 'foo' => 6 });
+
+        ok expect({ foo => 1, bar => 2 })->to->not->have->any->keys('baz', 'abc', 'def');
+        ok expect({ foo => 1, bar => 2 })->to->not->have->any->keys('baz');
+        ok expect({ foo => 1, bar => 2 })->to->not->contain->any->keys('baz');
+        ok expect({ foo => 1, bar => 2 })->to->not->have->all->keys(['baz', 'foo']);
+        ok expect({ foo => 1, bar => 2 })->to->not->contain->all->keys(['baz', 'foo']);
+        ok expect({ foo => 1, bar => 2 })->not->have->all->keys({ 'baz' => 8, 'foo' => 7 });
+        ok expect({ foo => 1, bar => 2 })->not->contain->all->keys({ 'baz' => 8, 'foo' => 7 });
+
+        # keys required
+        err { ok not expect({ foo => 1 })->to->have->keys };
+        err { ok not expect({ foo => 1 })->to->have->keys([]) };
+        err { ok not expect({ foo => 1 })->to->not->have->keys([]) };
+        err { ok not expect({ foo => 1 })->to->contain->keys([]) };
+
+        # mixed args msg
+        err { ok not expect({})->contain->keys(['a'], 'b') };
+        err { ok not expect({})->contain->keys({ a => 1 }, 'b') };
+
+        err { ok not expect({ foo => 1 })->to->have->keys(qw/bar/) };
+        err { ok not expect({ foo => 1 })->to->have->keys(qw/bar baz/) };
+        err { ok not expect({ foo => 1 })->to->have->keys(qw/foo bar baz/) };
     };
 };
 

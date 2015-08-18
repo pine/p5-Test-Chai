@@ -3,9 +3,11 @@ use strict;
 use warnings;
 use utf8;
 
+
+use Test::Deep::NoTest qw/eq_deeply/;
 use Mouse::Util::TypeConstraints ();
-use Test::Deep::NoTest;
-# use Scalar::Util qw/blessed/;
+use Scalar::Util qw/looks_like_number blessed/;
+use List::MoreUtils qw/any/;
 use DDP;
 
 sub test {
@@ -81,7 +83,24 @@ sub eql {
 
 sub has_property {
     my ($class, $name, $obj) = @_;
-    # return blessed($obj) && $obj->can($name);
+
+    return 0 unless defined $obj;
+
+    if (ref $obj eq 'ARRAY') {
+        return 0 unless looks_like_number($name);
+        return 0 <= $name && $name < @$obj;
+    }
+
+    elsif (ref $obj eq 'HASH') {
+        return $name unless defined $name;
+        return any { $_ eq $name } keys %$obj;
+    }
+
+    elsif (blessed($obj)) {
+        return defined $obj->{$name};
+    }
+
+    return 0 <= $name && $name < length $obj;
 }
 
 sub add_property {

@@ -1,5 +1,6 @@
 requires 'perl', '5.010000';
 
+requires 'List::MoreUtils';
 requires 'Scalar::Util';
 requires 'Data::Structure::Util';
 requires 'Test::Deep::NoTest';
