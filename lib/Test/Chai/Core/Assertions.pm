@@ -361,6 +361,7 @@ Assertion->add_method('within', \&within);
 
 # -----------------------------------------------------------------------------------
 
+use Test::Chai::Core::Assertions::InstanceOf qw/assert_instance_of/;
 # FIXME: instanceof
 
 # -----------------------------------------------------------------------------------
@@ -418,7 +419,7 @@ sub assert_match {
     );
 }
 
-Assertion->add_method('match', \&assert_match);
+Assertion->add_method('match',  \&assert_match);
 Assertion->add_method('matchs', \&assert_match);
 
 # -----------------------------------------------------------------------------------
@@ -446,6 +447,8 @@ use Test::Chai::Core::Assertions::Keys qw/assert_keys/;
 
 Assertion->add_method('keys', \&assert_keys);
 Assertion->add_method('key',  \&assert_keys);
+
+# -----------------------------------------------------------------------------------
 
 # FIXME throws
 # FIXME respondTo
