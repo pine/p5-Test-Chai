@@ -216,28 +216,7 @@ Assertion->add_property('empty', \&assert_empty);
 
 # -----------------------------------------------------------------------------------
 
-sub assert_equal {
-    my ($self, $val, $msg) = @_;
-
-    $msg = flag($self, 'message', $msg) if defined $msg;
-    my $obj = flag($self, 'object');
-
-    if (flag($self, 'deep')) {
-        return $self->eql($val);
-    }
-
-    my $equals       = defined $val && defined $obj && $val eq $obj;
-    my $equals_undef = !defined $val && !defined $obj; # undef == undef
-
-    return $self->assert(
-        $equals || $equals_undef,
-        'expected #{this} to equal #{exp}',
-        'expected #{this} to not equal #{exp}',
-        $val,
-        $self->_obj,
-        1
-    );
-}
+use Test::Chai::Core::Assertions::Equal qw/assert_equal/;
 
 Assertion->add_method('equal',  \&assert_equal);
 Assertion->add_method('equals', \&assert_equal);
@@ -447,8 +426,6 @@ use Test::Chai::Core::Assertions::Keys qw/assert_keys/;
 
 Assertion->add_method('keys', \&assert_keys);
 Assertion->add_method('key',  \&assert_keys);
-
-# -----------------------------------------------------------------------------------
 
 # FIXME throws
 # FIXME respondTo
