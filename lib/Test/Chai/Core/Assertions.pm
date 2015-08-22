@@ -136,7 +136,6 @@ Assertion->add_property('undefined', \&assert_undef);
 sub assert_nan {
     my $self = shift;
     my $obj  = flag($self, 'object');
-
     return $self->assert(
         isnan($obj),
         'expected #{this} to be NaN',
@@ -184,7 +183,6 @@ Assertion->add_method('eq',     \&assert_equal);
 
 sub assert_eql {
     my ($self, $obj, $msg) = @_;
-
     flag($self, 'message', $msg) if defined $msg;
     return $self->assert(
         Util->eql($obj, flag($self, 'object')),
@@ -201,31 +199,7 @@ Assertion->add_method('eqls', \&assert_eql);
 
 # -----------------------------------------------------------------------------------
 
-sub assert_above {
-    my ($self, $n, $msg) = @_;
-
-    flag($self, 'message', $msg) if defined $msg;
-    my $obj = flag($self, 'object');
-
-    if (flag($self, 'do_length')) {
-        my $len = Util->length($obj);
-        return $self->assert(
-            $len > $n,
-            'expected #{this} to have a length above #{exp} but got #{act}',
-            'expected #{this} to not have a length above #{exp}',
-            $n,
-            $len
-        );
-    }
-
-    else {
-        return $self->assert(
-            $obj > $n,
-            'expected #{this} to be above ' . $n,
-            'expected #{this} to be at most ' . $n
-        );
-    }
-}
+use Test::Chai::Core::Assertions::Above qw/assert_above/;
 
 Assertion->add_method('above',        \&assert_above);
 Assertion->add_method('gt',           \&assert_above);
@@ -233,62 +207,14 @@ Assertion->add_method('greater_than', \&assert_above);
 
 # -----------------------------------------------------------------------------------
 
-sub assert_least {
-    my ($self, $n, $msg) = @_;
-
-    flag($self, 'message', $msg) if defined $msg;
-    my $obj = flag($self, 'object');
-
-    if (flag($self, 'do_length')) {
-        my $len = Util->length($obj);
-        return $self->assert(
-            $len >= $n,
-            'expected #{this} to have a length a least #{exp} but got #{act}',
-            'expected #{this} to not have a length bellow #{exp}',
-            $n,
-            $len
-        );
-    }
-
-    else {
-        return $self->assert(
-            $obj >= $n,
-            'expected #{this} to be at least ' . $n,
-            'expected #{this} to be below ' . $n
-        );
-    }
-}
+use Test::Chai::Core::Assertions::Least qw/assert_least/;
 
 Assertion->add_method('least', \&assert_least);
 Assertion->add_method('gte',   \&assert_least);
 
 # -----------------------------------------------------------------------------------
 
-sub assert_below {
-    my ($self, $n, $msg) = @_;
-
-    flag($self, 'message', $msg) if defined $msg;
-    my $obj = flag($self, 'object');
-
-    if (flag($self, 'do_length')) {
-        my $len = Util->length($obj);
-        return $self->assert(
-            $len < $n,
-            'expected #{this} to have a length below #{exp} but got #{act}',
-            'expected #{this} to not have a length bellow #{exp}',
-            $n,
-            $len
-        );
-    }
-
-    else {
-        return $self->assert(
-            $obj < $n,
-            'expected #{this} to be below ' . $n,
-            'expected #{this} to be at least ' . $n
-        );
-    }
-}
+use Test::Chai::Core::Assertions::Below qw/assert_below/;
 
 Assertion->add_method('below',     \&assert_below);
 Assertion->add_method('lt',        \&assert_below);
