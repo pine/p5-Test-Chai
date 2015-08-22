@@ -181,6 +181,18 @@ subtest expect => sub {
         ok expect(qr/a/m)->not->to->deep->equal(qr/b/m);
     };
 
+    subtest 'NaN' => sub {
+        ok expect('NaN')->to->be->NaN;
+        ok expect('foo')->not->to->be->NaN;
+        ok expect({})->not->to->be->NaN;
+        ok expect(4)->not->to->be->NaN;
+        ok expect([])->not->to->be->NaN;
+
+        err { ok not expect(4)->to->be->NaN };
+        err { ok not expect([])->to->be->NaN };
+        err { ok not expect('foo')->to->be->NaN };
+    };
+
     # FIXME deep.equal(Date)
 
     subtest empty => sub {

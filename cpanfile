@@ -2,6 +2,7 @@ requires 'perl', '5.010000';
 
 requires 'List::MoreUtils';
 requires 'Scalar::Util';
+requires 'Scalar::Util::Numeric';
 requires 'Data::Structure::Util';
 requires 'Test::Deep::NoTest';
 

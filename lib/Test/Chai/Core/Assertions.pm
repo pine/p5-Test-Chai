@@ -4,6 +4,7 @@ use warnings;
 use utf8;
 
 use Scalar::Util qw/looks_like_number/;
+use Scalar::Util::Numeric qw/isnan/;
 
 
 sub Util ()      { 'Test::Chai::Util'      }
@@ -179,8 +180,10 @@ Assertion->add_property('undefined', \&assert_undef);
 
 sub assert_nan {
     my $self = shift;
+    my $obj  = flag($self, 'object');
+
     return $self->assert(
-        'NaN' eq flag($self, 'object'),
+        isnan($obj),
         'expected #{this} to be NaN',
         'expected #{this} to be NaN'
     );
