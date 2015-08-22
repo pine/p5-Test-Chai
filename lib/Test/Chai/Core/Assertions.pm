@@ -472,7 +472,7 @@ sub assert_string {
     flag($self, 'message', $msg) if defined $msg;
     my $obj = flag($self, 'object');
 
-    Assertion->new->($obj, $msg)->is->a('Str');
+    Assertion->new($obj, $msg)->is->a('Str');
 
     return $self->assert(
         index($obj, $str) > -1,

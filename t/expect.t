@@ -265,6 +265,16 @@ subtest expect => sub {
         err { ok not expect(1.5)->not->to->be->close_to(1.0, 1) };
     };
 
+    subtest 'string()' => sub {
+        ok expect('foobar')->to->have->string('bar');
+        ok expect('foobar')->to->have->string('foo');
+        ok expect('foobar')->to->not->have->string('baz');
+
+        err { ok not expect(3)->to->have->string('baz') };
+        err { ok not expect('foobar')->to->have->string('baz') };
+        err { ok not expect('foobar')->to->not->have->string('bar') };
+    };
+
     # FIXME include
 
     subtest 'keys(array|Object|arguments)' => sub {
