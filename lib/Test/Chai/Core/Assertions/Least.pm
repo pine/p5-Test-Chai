@@ -8,7 +8,7 @@ our @EXPORT_OK = qw/assert_least/;
 
 use Test::Chai::Util;
 sub Util () { 'Test::Chai::Util' }
-sub flag { Test::Chai::Util->flag(@_) }
+sub flag    { Test::Chai::Util->flag(@_) }
 
 sub assert_least {
     my ($self, $n, $msg) = @_;
