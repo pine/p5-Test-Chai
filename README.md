@@ -49,4 +49,4 @@ THE SOFTWARE.
 
 # AUTHOR
 
-Pine Mizune <pine@cpan.org<gt>
+Pine Mizune &lt;<pine@cpan.org>&gt;

@@ -181,18 +181,6 @@ subtest expect => sub {
         ok expect(qr/a/m)->not->to->deep->equal(qr/b/m);
     };
 
-    subtest 'NaN' => sub {
-        ok expect('NaN')->to->be->NaN;
-        ok expect('foo')->not->to->be->NaN;
-        ok expect({})->not->to->be->NaN;
-        ok expect(4)->not->to->be->NaN;
-        ok expect([])->not->to->be->NaN;
-
-        err { ok not expect(4)->to->be->NaN };
-        err { ok not expect([])->to->be->NaN };
-        err { ok not expect('foo')->to->be->NaN };
-    };
-
     # FIXME deep.equal(Date)
 
     subtest empty => sub {
@@ -209,6 +197,30 @@ subtest expect => sub {
         err { ok not expect(['foo'])->to->be->empty };
         err { ok not expect({})->not->to->be->empty };
         err { ok not expect({ foo => 'bar' })->to->be->empty };
+    };
+
+    subtest 'NaN' => sub {
+        ok expect('NaN')->to->be->NaN;
+        ok expect('foo')->not->to->be->NaN;
+        ok expect({})->not->to->be->NaN;
+        ok expect(4)->not->to->be->NaN;
+        ok expect([])->not->to->be->NaN;
+
+        err { ok not expect(4)->to->be->NaN };
+        err { ok not expect([])->to->be->NaN };
+        err { ok not expect('foo')->to->be->NaN };
+    };
+
+    subtest 'close_to' => sub {
+        ok expect(1.5)->to->be->close_to(1.0, 0.5);
+        ok expect(10)->to->be->close_to(20, 20);
+        ok expect(-10)->to->be->close_to(20, 30);
+
+        err { ok not expect(2)->to->be->close_to(1.0, 0.5) };
+        err { ok not expect(-10)->to->be->close_to(20, 29) };
+        err { ok not expect([ 1.5 ])->to->be->close_to(1.0, 0.5) };
+        err { ok not expect(1.5)->not->to->be->close_to('1.0', 0.5) };
+        err { ok not expect(1.5)->not->to->be->close_to(1.0, 1) };
     };
 
     # FIXME include
