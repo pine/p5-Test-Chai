@@ -341,7 +341,34 @@ Assertion->add_method('less_than', \&assert_below);
 
 # -----------------------------------------------------------------------------------
 
-# FIXME assertMost
+sub assert_most {
+    my ($self, $n, $msg) = @_;
+
+    flag($self, 'message', $msg) if defined $msg;
+    my $obj = flag($self, 'object');
+
+    if (flag($self, 'do_length')) {
+        my $len = Util->length($obj);
+        return $self->assert(
+            $len <= $n,
+            'expected #{this} to have a length at most #{exp} but got #{act}',
+            'expected #{this} to have a length above #{exp}',
+            $n,
+            $len
+        );
+    }
+
+    else {
+        return $self->assert(
+            $obj <= $n,
+            'expected #{this} to be at most ' . $n,
+            'expected #{this} to be above ' . $n
+        );
+    }
+}
+
+Assertion->add_method('most', \&assert_most);
+Assertion->add_method('lte',  \&assert_most);
 
 # -----------------------------------------------------------------------------------
 
@@ -428,14 +455,14 @@ sub assert_match {
     my $obj = flag($self, 'object');
 
     return $self->assert(
-        $obj =~ $re,
+        @{[ $obj =~ /$re/ ]} > 0,
         'expected #{this} to match ' . $re,
         'expected #{this} not to match ' . $re
     );
 }
 
-Assertion->add_method('match',  \&assert_match);
-Assertion->add_method('matchs', \&assert_match);
+Assertion->add_method('match',   \&assert_match);
+Assertion->add_method('matches', \&assert_match);
 
 # -----------------------------------------------------------------------------------
 

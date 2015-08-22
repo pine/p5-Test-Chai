@@ -159,8 +159,30 @@ subtest expect => sub {
         err { ok not expect([ 1, 2, 3 ])->to->have->length->below(2) };
     };
 
-    # FIXME most
-    # FIXME match
+    subtest 'most(n)' => sub {
+        ok expect(2)->to->be->at->most(5);
+        ok expect(2)->to->be->at->most(2);
+        ok expect(2)->to->not->be->at->most(1);
+        ok expect(2)->to->not->be->at->most(1);
+        ok expect('foo')->to->have->length->of->at->most(4);
+        ok expect([ 1, 2, 3 ])->to->have->length->of->at->most(4);
+
+        err { ok not expect(6)->to->be->at->most(5) };
+        err { ok not expect(6)->to->not->be->at->most(10) };
+        err { ok not expect('foo')->to->have->length->of->at->most(2) };
+        err { ok not expect([ 1, 2, 3 ])->to->have->length->of->at->most(2) };
+        err { ok not expect([ 1, 2 ])->to->not->have->length->of->at->most(2) };
+    };
+
+    subtest 'match(regexp)' => sub {
+        ok expect('foobar')->to->match(qr/^foo/);
+        ok expect('foobar')->to->matches(qr/^foo/);
+        ok expect('foobar')->to->not->match(qr/^bar/);
+
+        err { ok not expect('foobar')->to->match(qr/^bar/i) };
+        err { ok not expect('foobar')->to->matches(qr/^bar/i) };
+        err { ok not expect('foobar')->to->not->match(qr/^foo/i) };
+    };
 
     subtest 'length(n)' => sub {
         ok expect('test')->to->have->length(4);
