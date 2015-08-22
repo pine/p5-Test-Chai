@@ -241,7 +241,7 @@ subtest expect => sub {
         err { ok not expect({ foo => 'bar' })->to->be->empty };
     };
 
-    subtest 'NaN' => sub {
+    subtest NaN => sub {
         ok expect('NaN')->to->be->NaN;
         ok expect('foo')->not->to->be->NaN;
         ok expect({})->not->to->be->NaN;
