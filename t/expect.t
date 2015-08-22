@@ -272,6 +272,13 @@ subtest expect => sub {
         err { ok not expect(1.5)->not->to->be->close_to(1.0, 1) };
     };
 
+    # subtest 'include.members' => sub {
+    #     ok expect([1, 2, 3])->to->include->members([]);
+    #     ok expect([1, 2, 3])->to->include->members([3, 2]);
+    #     ok expect([1, 2, 3])->to->not->include->members([8, 4]);
+    #     ok expect([1, 2, 3])->to->not->include->members([1, 2, 3, 4]);
+    # };
+
     subtest 'string()' => sub {
         ok expect('foobar')->to->have->string('bar');
         ok expect('foobar')->to->have->string('foo');
@@ -282,7 +289,42 @@ subtest expect => sub {
         err { ok not expect('foobar')->to->not->have->string('bar') };
     };
 
-    # FIXME include
+    subtest 'include()' => sub {
+        expect([qw/foo bar/])->to->include('foo');
+        expect([qw/foo bar/])->to->include('foo');
+        expect([qw/foo bar/])->to->include('bar');
+        expect([ 1, 2 ])->to->include(1);
+        expect([qw/foo bar/])->to->not->include('baz');
+        expect([qw/foo bar/])->to->not->include(1);
+        # expect({ a => 1, b => 2 })->to->include({ b => 2 });
+        # expect({ a => 1, b => 2 })->to->not->include({ b => 3 });
+        # expect({ a => 1, b => 2 })->to->include({ a => 1, b => 2 });
+        # expect({ a => 1, b => 2 })->to->not->include({ a => 1, c => 2 });
+
+        # expect([{a:1},{b:2}])->to->include({a:1});
+        # expect([{a:1}])->to->include({a:1});
+        # expect([{a:1}])->to->not->include({b:1});
+
+        # err(function(){
+        # expect(['foo'])->to->include('bar', 'blah');
+        # }, "blah: expected [ 'foo' ] to include 'bar'");
+        #
+        # err(function(){
+        # expect(['bar', 'foo'])->to->not->include('foo', 'blah');
+        # }, "blah: expected [ 'bar', 'foo' ] to not include 'foo'");
+        #
+        # err(function(){
+        # expect({a:1})->to->include({b:2});
+        # }, "expected { a: 1 } to have a property 'b'");
+        #
+        # err(function(){
+        # expect({a:1,b:2})->to->not->include({b:2});
+        # }, "expected { a: 1, b: 2 } to not include { b: 2 }");
+        #
+        # err(function(){
+        # expect([{a:1},{b:2}])->to->not->include({b:2});
+        # }, "expected [ { a: 1 }, { b: 2 } ] to not include { b: 2 }");
+    };
 
     subtest 'keys(array|Object|arguments)' => sub {
         ok expect({ foo => 1 })->to->have->keys([qw/foo/]);

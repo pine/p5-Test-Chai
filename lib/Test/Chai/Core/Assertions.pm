@@ -65,60 +65,15 @@ Assertion->add_chainable_method('a',  \&assert_an);
 
 # -----------------------------------------------------------------------------------
 
-sub include_chaining_behavior {
-    flag(shift, 'contains', 1);
-}
+use Test::Chai::Core::Assertions::Include qw/
+    assert_include
+    assert_include_chaining_behavior
+/;
 
-sub include {
-    my ($self, $val, $msg) = @_;
-
-    flag($self, 'message', $msg) if defined $msg;
-
-    my $obj      = flag($self, 'object');
-    my $expected = 0;
-
-    if (ref $obj eq 'ARRAY' && ref $val eq 'HASH') {
-        for my $i (keys $obj) {
-            if (Util->eql($obj->[$i], $val)) {
-                $expected = 1;
-                last;
-            }
-        }
-    }
-
-    elsif (ref $val eq 'HASH') {
-        if (!flag($self, 'negate')) {
-            for my $i (keys $val) {
-                # FIXME
-            }
-        }
-
-        my $subset = {};
-        for my $k (keys $val) {
-            $subset->[$k] = $obj->[$k];
-        }
-        $expected = Util->eql($subset, $val);
-    }
-
-    elsif (ref $obj eq 'ARRAY') {
-        $expected = grep { $_ eq $val } @$obj;
-    }
-
-    elsif (ref $obj eq 'HASH') {
-        $expected = grep { $_ eq $val } values %$obj;
-    }
-
-    $self->assert(
-        $expected,
-        'expected #{this} to include ' . $val, # FIXME
-        'expected #{this} to not include ' . $val
-    );
-}
-
-Assertion->add_chainable_method('include',  \&include, \&include_chaining_behavior);
-Assertion->add_chainable_method('includes', \&include, \&include_chaining_behavior);
-Assertion->add_chainable_method('contain',  \&include, \&include_chaining_behavior);
-Assertion->add_chainable_method('contains', \&include, \&include_chaining_behavior);
+Assertion->add_chainable_method('include',  \&assert_include, \&assert_include_chaining_behavior);
+Assertion->add_chainable_method('includes', \&assert_include, \&assert_include_chaining_behavior);
+Assertion->add_chainable_method('contain',  \&assert_include, \&assert_include_chaining_behavior);
+Assertion->add_chainable_method('contains', \&assert_include, \&assert_include_chaining_behavior);
 
 # -----------------------------------------------------------------------------------
 
