@@ -222,63 +222,16 @@ Assertion->add_method('less_than', \&assert_below);
 
 # -----------------------------------------------------------------------------------
 
-sub assert_most {
-    my ($self, $n, $msg) = @_;
-
-    flag($self, 'message', $msg) if defined $msg;
-    my $obj = flag($self, 'object');
-
-    if (flag($self, 'do_length')) {
-        my $len = Util->length($obj);
-        return $self->assert(
-            $len <= $n,
-            'expected #{this} to have a length at most #{exp} but got #{act}',
-            'expected #{this} to have a length above #{exp}',
-            $n,
-            $len
-        );
-    }
-
-    else {
-        return $self->assert(
-            $obj <= $n,
-            'expected #{this} to be at most ' . $n,
-            'expected #{this} to be above ' . $n
-        );
-    }
-}
+use Test::Chai::Core::Assertions::Most qw/assert_most/;
 
 Assertion->add_method('most', \&assert_most);
 Assertion->add_method('lte',  \&assert_most);
 
 # -----------------------------------------------------------------------------------
 
-sub within {
-    my ($self, $start, $finish, $msg) = @_;
+use Test::Chai::Core::Assertions::Within qw/assert_within/;
 
-    flag($self, 'message', $msg) if defined $msg;
-    my $obj   = flag($self, 'object');
-    my $range = $start . '..' . $finish;
-
-    if (flag($self, 'do_length')) {
-        my $len = Util->length($obj);
-        return $self->assert(
-            $len >= $start && $len < $finish,
-            'expected #{this} to have a length within ' . $range,
-            'expected #{this} to not have a length within ' . $range
-        );
-    }
-
-    else {
-        return $self->assert(
-            $obj >= $start && $obj <= $finish,
-            'expected #{this} to be within ' . $range,
-            'expected #{this} to not be within ' . $range
-        );
-   }
-}
-
-Assertion->add_method('within', \&within);
+Assertion->add_method('within', \&assert_within);
 
 # -----------------------------------------------------------------------------------
 
