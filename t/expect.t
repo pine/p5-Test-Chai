@@ -253,7 +253,14 @@ subtest expect => sub {
         err { ok not expect('foo')->to->be->NaN };
     };
 
-    subtest 'close_to' => sub {
+    subtest satisfy => sub {
+        my $matcher = sub { $_[0] == 1 };
+
+        ok expect(1)->to->satisfy($matcher);
+        err { ok not expect(2)->to->satisfy($matcher) };
+    };
+
+    subtest close_to => sub {
         ok expect(1.5)->to->be->close_to(1.0, 0.5);
         ok expect(10)->to->be->close_to(20, 20);
         ok expect(-10)->to->be->close_to(20, 30);

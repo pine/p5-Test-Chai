@@ -525,7 +525,7 @@ Assertion->add_method('satisfies', \&assert_satisfy);
 
 use Test::Chai::Core::Assertions::CloseTo qw/assert_close_to/;
 
-Assertion->add_method('close_to',   \&assert_close_to);
+Assertion->add_method('close_to', \&assert_close_to);
 
 # -----------------------------------------------------------------------------------
 
