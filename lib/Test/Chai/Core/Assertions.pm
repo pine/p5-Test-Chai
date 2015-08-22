@@ -281,7 +281,7 @@ Assertion->add_method('greater_than', \&assert_above);
 sub assert_least {
     my ($self, $n, $msg) = @_;
 
-    flag($self, 'message', $msg);
+    flag($self, 'message', $msg) if defined $msg;
     my $obj = flag($self, 'object');
 
     if (flag($self, 'do_length')) {
@@ -309,7 +309,38 @@ Assertion->add_method('gte',   \&assert_least);
 
 # -----------------------------------------------------------------------------------
 
-# FIXME assertBelow
+sub assert_below {
+    my ($self, $n, $msg) = @_;
+
+    flag($self, 'message', $msg) if defined $msg;
+    my $obj = flag($self, 'object');
+
+    if (flag($self, 'do_length')) {
+        my $len = Util->length($obj);
+        return $self->assert(
+            $len < $n,
+            'expected #{this} to have a length below #{exp} but got #{act}',
+            'expected #{this} to not have a length bellow #{exp}',
+            $n,
+            $len
+        );
+    }
+
+    else {
+        return $self->assert(
+            $obj < $n,
+            'expected #{this} to be below ' . $n,
+            'expected #{this} to be at least ' . $n
+        );
+    }
+}
+
+Assertion->add_method('below',     \&assert_below);
+Assertion->add_method('lt',        \&assert_below);
+Assertion->add_method('less_than', \&assert_below);
+
+# -----------------------------------------------------------------------------------
+
 # FIXME assertMost
 
 # -----------------------------------------------------------------------------------
@@ -344,7 +375,9 @@ Assertion->add_method('within', \&within);
 # -----------------------------------------------------------------------------------
 
 use Test::Chai::Core::Assertions::InstanceOf qw/assert_instance_of/;
-# FIXME: instanceof
+
+Assertion->add_method('instanceof',  \&assert_instance_of);
+Assertion->add_method('instance_of', \&assert_instance_of);
 
 # -----------------------------------------------------------------------------------
 

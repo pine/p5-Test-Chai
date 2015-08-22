@@ -14,5 +14,6 @@ on 'test' => sub {
     requires 'Module::Find', '0.13';
     requires 'Test::More', '0.98';
     requires 'Test::Mock::Guard';
+    requires 'Test::MockObject', '1.20150527';
 };
 

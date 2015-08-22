@@ -3,6 +3,7 @@ use warnings;
 use utf8;
 
 use t::Util;
+use Test::MockObject;
 use Test::Chai qw/expect/;
 
 sub err (&;&$) {
@@ -96,8 +97,13 @@ subtest expect => sub {
         err { ok not expect(5)->to->not->be->a('Int') };
     };
 
-    # FIXME
-    # subtest instanceof
+    subtest instanceof => sub {
+        my $foo = Test::MockObject->new;
+        $foo->set_isa('Example::Foo');
+
+        ok expect($foo)->to->be->an->instance_of('Example::Foo');
+        err { ok not expect(3)->to->be->an->instance_of('Example::Foo') };
+    };
 
     subtest 'within(start, finish)' => sub {
         ok expect(5)->to->be->within(5, 10);
@@ -138,7 +144,21 @@ subtest expect => sub {
         err { ok not expect([ 1, 2, 3, 4 ])->to->not->have->length->of->at->least(4) };
     };
 
-    # FIXME below
+    subtest 'below(n)' => sub {
+        ok expect(2)->to->be->below(5);
+        ok expect(2)->to->be->less_than(5);
+        ok expect(2)->to->be->lt(5);
+        ok expect(2)->to->not->be->below(2);
+        ok expect(2)->to->not->be->below(1);
+        ok expect('foo')->to->have->length->below(4);
+        ok expect([ 1, 2, 3 ])->to->have->length->below(4);
+
+        err { ok not expect(6)->to->be->below(5) };
+        err { ok not expect(6)->to->not->be->below(10) };
+        err { ok not expect('foo')->to->have->length->below(2) };
+        err { ok not expect([ 1, 2, 3 ])->to->have->length->below(2) };
+    };
+
     # FIXME most
     # FIXME match
 

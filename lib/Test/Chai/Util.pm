@@ -103,6 +103,10 @@ sub has_property {
     return 0 <= $name && $name < length $obj;
 }
 
+sub get_name {
+
+}
+
 sub add_property {
     my ($class, $pkg, $name, $code) = @_;
 
