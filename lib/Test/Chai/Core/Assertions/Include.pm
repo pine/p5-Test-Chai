@@ -11,7 +11,7 @@ our @EXPORT_OK = qw/
 
 use Test::Chai::Util;
 sub Util () { 'Test::Chai::Util' }
-sub flag { Test::Chai::Util->flag(@_) }
+sub flag    { Util->flag(@_)     }
 
 sub assert_include {
     my ($self, $val, $msg) = @_;

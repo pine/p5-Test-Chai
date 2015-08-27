@@ -149,7 +149,7 @@ sub add_chainable_method {
     *{"${pkg}::${name}"} = sub {
         &{$chainable_behavior->{chaining_behavior}}(@_);
 
-        if (scalar @_ - 1 == 1) {
+        if (scalar @_ - 1 >= 1) {
             # my $old_ssfi = $class->flag($_[0], 'ssfi');
             #
             # if (defined $old_ssfi) { # FIXME

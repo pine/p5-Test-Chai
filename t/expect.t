@@ -384,6 +384,28 @@ subtest expect => sub {
         err { ok not expect({ foo => 1 })->to->have->keys(qw/bar baz/) };
         err { ok not expect({ foo => 1 })->to->have->keys(qw/foo bar baz/) };
     };
+    subtest 'increase, decrease' => sub {
+        my $obj = { value => 10 };
+
+        my $incFn = sub { $obj->{value} += 2 };
+        my $decFn = sub { $obj->{value} -= 3 };
+        my $smFn  = sub { $obj->{value} += 0 };
+
+        ok expect($smFn)->to->not->increase($obj, 'value');
+        is $obj->{value}, 10;
+        ok expect($decFn)->to->not->increase($obj, 'value');
+        is $obj->{value}, 7;
+        ok expect($incFn)->to->increase($obj, 'value');
+        is $obj->{value}, 9;
+
+        ok expect($smFn)->to->not->decrease($obj, 'value');
+        is $obj->{value}, 9;
+        ok expect($incFn)->to->not->decrease($obj, 'value');
+        is $obj->{value}, 11;
+        ok expect($decFn)->to->decrease($obj, 'value');
+        is $obj->{value}, 8;
+    };
+
 };
 
 done_testing;

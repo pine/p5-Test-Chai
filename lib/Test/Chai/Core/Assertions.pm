@@ -9,8 +9,7 @@ use Scalar::Util::Numeric qw/isnan/;
 
 sub Util ()      { 'Test::Chai::Util'      }
 sub Assertion () { 'Test::Chai::Assertion' }
-
-sub flag { Util->flag(@_) }
+sub flag         { Util->flag(@_)          }
 
 # -----------------------------------------------------------------------------------
 
@@ -368,50 +367,16 @@ Assertion->add_method('close_to', \&assert_close_to);
 
 # -----------------------------------------------------------------------------------
 
-sub assert_increases {
-    my ($self, $object, $prop, $msg) = @_;
+use Test::Chai::Core::Assertions::Increase qw/assert_increase/;
 
-    flag($self, 'message', $msg) if defined $msg;
-    my $fn = flag($self, 'object');
-
-    # Assertion->new->($obj, $msg)->to->have->property # FIXME
-    Assertion->new($fn)->is->a('CodeRef');
-
-    my $initial = $object->{$prop};
-    $fn->();
-
-    return $self->assert(
-        $object->{$prop} - $initial > 0,
-        'expected .' . $prop . ' to increase',
-        'expected .' . $prop . ' to not increase'
-    );
-}
-
-Assertion->add_chainable_method('increase',  \&assert_increases);
-Assertion->add_chainable_method('increases', \&assert_increases);
+Assertion->add_chainable_method('increase',  \&assert_increase);
+Assertion->add_chainable_method('increases', \&assert_increase);
 
 # -----------------------------------------------------------------------------------
 
-sub assert_decreases {
-    my ($self, $object, $prop, $msg) = @_;
+use Test::Chai::Core::Assertions::Decrease qw/assert_decrease/;
 
-    flag($self, 'message', $msg) if defined $msg;
-    my $fn = flag($self, 'object');
-
-    # Assertion->new->($obj, $msg)->to->have->property # FIXME
-    Assertion->new($fn)->is->a('CodeRef');
-
-    my $initial = $object->{$prop};
-    $fn->();
-
-    return $self->assert(
-        $object->{$prop} - $initial < 0,
-        'expected .' . $prop . ' to decrease',
-        'expected .' . $prop . ' to not decrease'
-    );
-}
-
-Assertion->add_chainable_method('decrease',  \&assert_decreases);
-Assertion->add_chainable_method('decreases', \&assert_decreases);
+Assertion->add_chainable_method('decrease',  \&assert_decrease);
+Assertion->add_chainable_method('decreases', \&assert_decrease);
 
 1;
