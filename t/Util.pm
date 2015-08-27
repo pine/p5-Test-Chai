@@ -6,11 +6,13 @@ use Exporter qw/import/;
 use lib qw/lib/;
 
 use Test::More;
+use Test::Deep;
 use Test::Exception;
 use Test::Mock::Guard;
 
 our @EXPORT = (
     @Test::More::EXPORT,
+    @Test::Deep::EXPORT,
     @Test::Exception::EXPORT,
     @Test::Mock::Guard::EXPORT,
 );
