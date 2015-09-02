@@ -3,9 +3,9 @@ use warnings;
 use utf8;
 
 use t::Util;
-use Test::Chai::Util::PathInfo;
+use Test::Chai::Util::GetPathInfo;
 
-sub _parse_path { Test::Chai::Util::PathInfo::_parse_path(@_) }
+sub _parse_path { Test::Chai::Util::GetPathInfo::_parse_path(@_) }
 
 subtest basic => sub {
     cmp_deeply

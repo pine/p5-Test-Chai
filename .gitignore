@@ -20,6 +20,7 @@ cover_db/
 *.old
 *~
 *.swp
+*.swo
 *.o
 *.obj
 

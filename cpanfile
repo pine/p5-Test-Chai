@@ -14,6 +14,7 @@ on 'test' => sub {
     requires 'Module::Find', '0.13';
     requires 'Test::More', '0.98';
     requires 'Test::Deep', '0.117';
+    requires 'Test::Deep::Matcher', '0.01';
     requires 'Test::Exception';
     requires 'Test::Mock::Guard';
     requires 'Test::MockObject', '1.20150527';

@@ -1,10 +1,12 @@
-package Test::Chai::Util::PathInfo;
+package Test::Chai::Util::GetPathInfo;
 use strict;
 use warnings;
 use utf8;
 
 use Exporter qw/import/;
 our @EXPORT_OK = qw/get_path_info/;
+
+use Test::Chai::Util::HasProperty qw/has_property/;
 
 sub get_path_info {
     my ($path, $obj) = @_;
@@ -18,6 +20,7 @@ sub get_path_info {
         value  => _get_path_value($parsed, $obj),
     };
 
+    $info->{exists} = has_property($info->{name}, $info->{parent});
     return $info;
 }
 
