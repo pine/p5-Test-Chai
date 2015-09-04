@@ -253,6 +253,24 @@ subtest expect => sub {
         err { ok not expect('foo')->to->be->NaN };
     };
 
+    subtest 'property(name)' => sub {
+        # expect('test')->to->have->property('length'); # FIXME
+        # expect(4)->to->not->have->property('length');
+
+        expect({ 'foo->bar' => 'baz' })->to->have->property('foo->bar');
+        expect({ foo => { bar => 'baz' } })->to->not->have->property('foo->bar');
+
+        my $obj = { foo => undef };
+        expect($obj)->to->have->property('foo');
+
+        expect({ 'foo->bar[]' => 'baz'})->to->have->property('foo->bar[]');
+
+        # err { # FIXME
+        #   expect('asd')->to->have->property('foo');
+        # };
+        err { expect({ foo => { bar => 'baz' } })->to->have->property('foo->bar') };
+    };
+
     subtest satisfy => sub {
         my $matcher = sub { $_[0] == 1 };
 

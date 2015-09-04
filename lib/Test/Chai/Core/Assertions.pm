@@ -241,18 +241,9 @@ Assertion->add_method('instance_of', \&assert_instance_of);
 
 # -----------------------------------------------------------------------------------
 
-# sub property {
-#     my ($self, $val, $msg) = @_;
-#
-#     flag($self, 'message', $msg) if defined $msg;
-#
-#     my $is_deep    = !!flag($self, 'deep');
-#     my $descripter = $is_deep ? 'deep property ' : 'property ';
-#     my $negate     = flag($self, 'negate');
-#     my $obj        = flag($self, 'object');
-# }
-#
-# Assertion->add_method('property', \&property);
+use Test::Chai::Core::Assertions::Property qw/assert_property/;
+
+Assertion->add_method('property', \&assert_property);
 
 # -----------------------------------------------------------------------------------
 

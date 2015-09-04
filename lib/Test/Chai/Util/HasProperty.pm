@@ -26,7 +26,11 @@ sub has_property {
         return 0;
     }
 
-    return 0 <= $name && $name < length $obj;
+    elsif (looks_like_number($name)) {
+        return 0 <= $name && $name < length $obj;
+    }
+
+    return 0;
 }
 
 1;
