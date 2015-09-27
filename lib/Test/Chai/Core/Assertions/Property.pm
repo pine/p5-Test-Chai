@@ -6,11 +6,10 @@ use utf8;
 use Exporter qw/import/;
 our @EXPORT_OK = qw/assert_property/;
 
-use Test::Chai::Util;
+use Test::Chai::Util::Flag qw/flag/;
+use Test::Chai::Util::Equal qw/equal/;
 use Test::Chai::Util::GetPathInfo qw/get_path_info/;
 use Test::Chai::Util::HasProperty qw/has_property/;
-sub Util () { 'Test::Chai::Util' }
-sub flag    { Test::Chai::Util->flag(@_) }
 
 sub assert_property {
     my ($self, $name, $val, $msg) = @_;
@@ -43,7 +42,7 @@ sub assert_property {
     if (@_ - 1 > 1) {
         # FIXME: inspect
         $self->assert(
-            $val eq $value,
+            equal($val, $value),
             'expected #{this} to have a ' . $descriptor . $name . ' of #{exp}, but got #{act}',
             'expected #{this} to not have a ' . $descriptor . $name . ' of #{act}',
             $val,

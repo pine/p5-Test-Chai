@@ -63,7 +63,7 @@ sub obj_display {
     return np($obj); # FIXME
 }
 
-sub flag {
+sub flag {;
     my ($class, $obj, $key, $value) = @_;
 
     my $flags = $obj->{__flags};

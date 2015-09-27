@@ -10,8 +10,9 @@ our @EXPORT_OK = qw/
 /;
 
 use Test::Chai::Util;
+use Test::Chai::Util::Flag qw/flag/;
+use Test::Chai::Assertion;
 sub Util () { 'Test::Chai::Util' }
-sub flag    { Util->flag(@_)     }
 
 sub assert_include {
     my ($self, $val, $msg) = @_;
@@ -32,20 +33,25 @@ sub assert_include {
 
     elsif (ref $val eq 'HASH') {
         if (!flag($self, 'negate')) {
-            for my $i (keys $val) {
-                # FIXME property
+            for my $k (keys $val) {
+                Test::Chai::Assertion->new($obj)->property($k, $val->{$k});
             }
+            return;
         }
 
         my $subset = {};
         for my $k (keys $val) {
-            $subset->[$k] = $obj->[$k];
+            $subset->{$k} = $obj->{$k};
         }
         $expected = Util->eql($subset, $val);
     }
 
     elsif (ref $obj eq 'ARRAY') {
+        use DDP;
+        warn np($obj);
+        warn np($val);
         $expected = grep { $_ eq $val } @$obj;
+        warn $expected;
     }
 
     elsif (ref $obj eq 'HASH') {

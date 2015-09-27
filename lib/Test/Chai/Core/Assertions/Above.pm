@@ -6,9 +6,8 @@ use utf8;
 use Exporter qw/import/;
 our @EXPORT_OK = qw/assert_above/;
 
-use Test::Chai::Util;
-sub Util () { 'Test::Chai::Util' }
-sub flag    { Test::Chai::Util->flag(@_) }
+use Test::Chai::Util::Flag qw/flag/;
+use Test::Chai::Util::Length;
 
 sub assert_above {
     my ($self, $n, $msg) = @_;
@@ -17,7 +16,7 @@ sub assert_above {
     my $obj = flag($self, 'object');
 
     if (flag($self, 'do_length')) {
-        my $len = Util->length($obj);
+        my $len = Test::Chai::Util::Length->length($obj);
         return $self->assert(
             $len > $n,
             'expected #{this} to have a length above #{exp} but got #{act}',

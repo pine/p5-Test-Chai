@@ -56,7 +56,7 @@ sub assert_an {
         Util->matcher($type)->($obj),
         'expected #{this} to be ' . $article . $type,
         'expected #{this} not to be ' . $article . $type
-    );
+    ) ? undef : 0;
 }
 
 Assertion->add_chainable_method('an', \&assert_an);
