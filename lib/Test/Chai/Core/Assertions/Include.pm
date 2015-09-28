@@ -47,11 +47,7 @@ sub assert_include {
     }
 
     elsif (ref $obj eq 'ARRAY') {
-        use DDP;
-        warn np($obj);
-        warn np($val);
         $expected = grep { $_ eq $val } @$obj;
-        warn $expected;
     }
 
     elsif (ref $obj eq 'HASH') {

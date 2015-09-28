@@ -354,7 +354,13 @@ Assertion->add_method('close_to', \&assert_close_to);
 # -----------------------------------------------------------------------------------
 
 # FIXME members
-# FIXME change
+
+# -----------------------------------------------------------------------------------
+
+use Test::Chai::Core::Assertions::Change qw/assert_change/;
+
+Assertion->add_method('change',  \&assert_change);
+Assertion->add_method('changes', \&assert_change);
 
 # -----------------------------------------------------------------------------------
 

@@ -402,63 +402,77 @@ subtest expect => sub {
     };
 
     subtest 'keys(array|Object|arguments)' => sub {
-        ok expect({ foo => 1 })->to->have->keys([qw/foo/]);
-        ok expect({ foo => 1 })->have->keys({ foo => 6 });
-        ok expect({ foo => 1, bar => 2 })->to->have->keys([qw/foo bar/]);
-        ok expect({ foo => 1, bar => 2 })->to->have->keys(qw/foo bar/);
-        ok expect({ foo => 1, bar => 2 })->have->keys({ foo => 6, bar => 7 });
-        ok expect({ foo => 1, bar => 2, baz => 3 })->to->contain->keys(qw/foo bar/);
-        ok expect({ foo => 1, bar => 2, baz => 3 })->to->contain->keys(qw/bar foo/);
-        ok expect({ foo => 1, bar => 2, baz => 3 })->to->contain->keys(qw/baz/);
-        ok expect({ foo => 1, bar => 2 })->contain->keys({ foo => 6 });
-        ok expect({ foo => 1, bar => 2 })->contain->keys({ bar => 7 });
-        ok expect({ foo => 1, bar => 2 })->contain->keys({ foo => 6 });
+        expect({ foo => 1 })->to->have->keys([qw/foo/]);
+        expect({ foo => 1 })->have->keys({ foo => 6 });
+        expect({ foo => 1, bar => 2 })->to->have->keys([qw/foo bar/]);
+        expect({ foo => 1, bar => 2 })->to->have->keys(qw/foo bar/);
+        expect({ foo => 1, bar => 2 })->have->keys({ foo => 6, bar => 7 });
+        expect({ foo => 1, bar => 2, baz => 3 })->to->contain->keys(qw/foo bar/);
+        expect({ foo => 1, bar => 2, baz => 3 })->to->contain->keys(qw/bar foo/);
+        expect({ foo => 1, bar => 2, baz => 3 })->to->contain->keys(qw/baz/);
+        expect({ foo => 1, bar => 2 })->contain->keys({ foo => 6 });
+        expect({ foo => 1, bar => 2 })->contain->keys({ bar => 7 });
+        expect({ foo => 1, bar => 2 })->contain->keys({ foo => 6 });
 
-        ok expect({ foo => 1, bar => 2 })->to->contain->keys(qw/foo/);
-        ok expect({ foo => 1, bar => 2 })->to->contain->keys(qw/bar foo/);
-        ok expect({ foo => 1, bar => 2 })->to->contain->keys([qw/foo/]);
-        ok expect({ foo => 1, bar => 2 })->to->contain->keys([qw/bar/]);
-        ok expect({ foo => 1, bar => 2 })->to->contain->keys([qw/bar foo/]);
-        ok expect({ foo => 1, bar => 2, baz => 3 })->to->contain->all->keys([qw/bar foo/]);
+        expect({ foo => 1, bar => 2 })->to->contain->keys(qw/foo/);
+        expect({ foo => 1, bar => 2 })->to->contain->keys(qw/bar foo/);
+        expect({ foo => 1, bar => 2 })->to->contain->keys([qw/foo/]);
+        expect({ foo => 1, bar => 2 })->to->contain->keys([qw/bar/]);
+        expect({ foo => 1, bar => 2 })->to->contain->keys([qw/bar foo/]);
+        expect({ foo => 1, bar => 2, baz => 3 })->to->contain->all->keys([qw/bar foo/]);
 
-        ok expect({ foo => 1, bar => 2 })->to->not->have->keys('baz');
-        ok expect({ foo => 1, bar => 2 })->to->not->have->keys('foo', 'baz');
-        ok expect({ foo => 1, bar => 2 })->to->not->contain->keys('baz');
-        ok expect({ foo => 1, bar => 2 })->to->not->contain->keys('foo', 'baz');
-        ok expect({ foo => 1, bar => 2 })->to->not->contain->keys('baz', 'foo');
+        expect({ foo => 1, bar => 2 })->to->not->have->keys('baz');
+        expect({ foo => 1, bar => 2 })->to->not->have->keys('foo', 'baz');
+        expect({ foo => 1, bar => 2 })->to->not->contain->keys('baz');
+        expect({ foo => 1, bar => 2 })->to->not->contain->keys('foo', 'baz');
+        expect({ foo => 1, bar => 2 })->to->not->contain->keys('baz', 'foo');
 
-        ok expect({ foo => 1, bar => 2 })->to->have->any->keys('foo', 'baz');
-        ok expect({ foo => 1, bar => 2 })->to->have->any->keys('foo');
-        ok expect({ foo => 1, bar => 2 })->to->contain->any->keys('bar', 'baz');
-        ok expect({ foo => 1, bar => 2 })->to->contain->any->keys(['foo']);
-        ok expect({ foo => 1, bar => 2 })->to->have->all->keys(['bar', 'foo']);
-        ok expect({ foo => 1, bar => 2 })->to->contain->all->keys(['bar', 'foo']);
-        ok expect({ foo => 1, bar => 2 })->contain->any->keys({ 'foo' => 6 });
-        ok expect({ foo => 1, bar => 2 })->have->all->keys({ 'foo' => 6, 'bar' => 7 });
-        ok expect({ foo => 1, bar => 2 })->contain->all->keys({ 'bar' => 7, 'foo' => 6 });
+        expect({ foo => 1, bar => 2 })->to->have->any->keys('foo', 'baz');
+        expect({ foo => 1, bar => 2 })->to->have->any->keys('foo');
+        expect({ foo => 1, bar => 2 })->to->contain->any->keys('bar', 'baz');
+        expect({ foo => 1, bar => 2 })->to->contain->any->keys(['foo']);
+        expect({ foo => 1, bar => 2 })->to->have->all->keys(['bar', 'foo']);
+        expect({ foo => 1, bar => 2 })->to->contain->all->keys(['bar', 'foo']);
+        expect({ foo => 1, bar => 2 })->contain->any->keys({ 'foo' => 6 });
+        expect({ foo => 1, bar => 2 })->have->all->keys({ 'foo' => 6, 'bar' => 7 });
+        expect({ foo => 1, bar => 2 })->contain->all->keys({ 'bar' => 7, 'foo' => 6 });
 
-        ok expect({ foo => 1, bar => 2 })->to->not->have->any->keys('baz', 'abc', 'def');
-        ok expect({ foo => 1, bar => 2 })->to->not->have->any->keys('baz');
-        ok expect({ foo => 1, bar => 2 })->to->not->contain->any->keys('baz');
-        ok expect({ foo => 1, bar => 2 })->to->not->have->all->keys(['baz', 'foo']);
-        ok expect({ foo => 1, bar => 2 })->to->not->contain->all->keys(['baz', 'foo']);
-        ok expect({ foo => 1, bar => 2 })->not->have->all->keys({ 'baz' => 8, 'foo' => 7 });
-        ok expect({ foo => 1, bar => 2 })->not->contain->all->keys({ 'baz' => 8, 'foo' => 7 });
+        expect({ foo => 1, bar => 2 })->to->not->have->any->keys('baz', 'abc', 'def');
+        expect({ foo => 1, bar => 2 })->to->not->have->any->keys('baz');
+        expect({ foo => 1, bar => 2 })->to->not->contain->any->keys('baz');
+        expect({ foo => 1, bar => 2 })->to->not->have->all->keys(['baz', 'foo']);
+        expect({ foo => 1, bar => 2 })->to->not->contain->all->keys(['baz', 'foo']);
+        expect({ foo => 1, bar => 2 })->not->have->all->keys({ 'baz' => 8, 'foo' => 7 });
+        expect({ foo => 1, bar => 2 })->not->contain->all->keys({ 'baz' => 8, 'foo' => 7 });
 
         # keys required
-        err { ok not expect({ foo => 1 })->to->have->keys };
-        err { ok not expect({ foo => 1 })->to->have->keys([]) };
-        err { ok not expect({ foo => 1 })->to->not->have->keys([]) };
-        err { ok not expect({ foo => 1 })->to->contain->keys([]) };
+        err { expect({ foo => 1 })->to->have->keys };
+        err { expect({ foo => 1 })->to->have->keys([]) };
+        err { expect({ foo => 1 })->to->not->have->keys([]) };
+        err { expect({ foo => 1 })->to->contain->keys([]) };
 
         # mixed args msg
-        err { ok not expect({})->contain->keys(['a'], 'b') };
-        err { ok not expect({})->contain->keys({ a => 1 }, 'b') };
+        err { expect({})->contain->keys(['a'], 'b') };
+        err { expect({})->contain->keys({ a => 1 }, 'b') };
 
-        err { ok not expect({ foo => 1 })->to->have->keys(qw/bar/) };
-        err { ok not expect({ foo => 1 })->to->have->keys(qw/bar baz/) };
-        err { ok not expect({ foo => 1 })->to->have->keys(qw/foo bar baz/) };
+        err { expect({ foo => 1 })->to->have->keys(qw/bar/) };
+        err { expect({ foo => 1 })->to->have->keys(qw/bar baz/) };
+        err { expect({ foo => 1 })->to->have->keys(qw/foo bar baz/) };
     };
+
+
+    subtest 'change' => sub {
+        my $obj     = { value => 10, str => 'foo' };
+        my $fn      = sub { $obj->{value} += 5 };
+        my $same_fn = sub { 'foo' . 'bar' };
+        my $bang_fn = sub { $obj->{str} .= '!' };
+
+        expect($fn)->to->change($obj, 'value');
+        expect($same_fn)->to->not->change($obj, 'value');
+        expect($same_fn)->to->not->change($obj, 'str');
+        expect($bang_fn)->to->change($obj, 'str');
+    };
+
     subtest 'increase, decrease' => sub {
         my $obj = { value => 10 };
 
@@ -466,21 +480,20 @@ subtest expect => sub {
         my $decFn = sub { $obj->{value} -= 3 };
         my $smFn  = sub { $obj->{value} += 0 };
 
-        ok expect($smFn)->to->not->increase($obj, 'value');
+        expect($smFn)->to->not->increase($obj, 'value');
         is $obj->{value}, 10;
-        ok expect($decFn)->to->not->increase($obj, 'value');
+        expect($decFn)->to->not->increase($obj, 'value');
         is $obj->{value}, 7;
-        ok expect($incFn)->to->increase($obj, 'value');
+        expect($incFn)->to->increase($obj, 'value');
         is $obj->{value}, 9;
 
-        ok expect($smFn)->to->not->decrease($obj, 'value');
+        expect($smFn)->to->not->decrease($obj, 'value');
         is $obj->{value}, 9;
-        ok expect($incFn)->to->not->decrease($obj, 'value');
+        expect($incFn)->to->not->decrease($obj, 'value');
         is $obj->{value}, 11;
-        ok expect($decFn)->to->decrease($obj, 'value');
+        expect($decFn)->to->decrease($obj, 'value');
         is $obj->{value}, 8;
     };
-
 };
 
 done_testing;
