@@ -2,9 +2,11 @@ use strict;
 use warnings;
 use utf8;
 
-use t::Util;
 use Test::MockObject;
 use Test::Chai qw/expect/;
+
+use t::Util;
+use Test::Chai::Test;
 
 sub err (&;&$) {
     my ($code, $msg) = @_;
@@ -332,32 +334,6 @@ subtest expect => sub {
         # }, "blah: expected 'asd' to have a property 'constructor' of [Function: Number], but got [Function: String]");
     };
 
-    subtest satisfy => sub {
-        my $matcher = sub { $_[0] == 1 };
-
-        expect(1)->to->satisfy($matcher);
-        err { expect(2)->to->satisfy($matcher) };
-    };
-
-    subtest close_to => sub {
-        expect(1.5)->to->be->close_to(1.0, 0.5);
-        expect(10)->to->be->close_to(20, 20);
-        expect(-10)->to->be->close_to(20, 30);
-
-        err { expect(2)->to->be->close_to(1.0, 0.5) };
-        err { expect(-10)->to->be->close_to(20, 29) };
-        err { expect([ 1.5 ])->to->be->close_to(1.0, 0.5) };
-        err { expect(1.5)->not->to->be->close_to('1.0', 0.5) };
-        err { expect(1.5)->not->to->be->close_to(1.0, 1) };
-    };
-
-    # subtest 'include.members' => sub {
-    #     ok expect([1, 2, 3])->to->include->members([]);
-    #     ok expect([1, 2, 3])->to->include->members([3, 2]);
-    #     ok expect([1, 2, 3])->to->not->include->members([8, 4]);
-    #     ok expect([1, 2, 3])->to->not->include->members([1, 2, 3, 4]);
-    # };
-
     subtest 'string()' => sub {
         expect('foobar')->to->have->string('bar');
         expect('foobar')->to->have->string('foo');
@@ -452,7 +428,7 @@ subtest expect => sub {
         err { expect({ foo => 1 })->to->contain->keys([]) };
 
         # mixed args msg
-        err { expect({})->contain->keys(['a'], 'b') };
+        err { expect({})->contain->keys([ 'a' ], 'b') };
         err { expect({})->contain->keys({ a => 1 }, 'b') };
 
         err { expect({ foo => 1 })->to->have->keys(qw/bar/) };
@@ -460,6 +436,73 @@ subtest expect => sub {
         err { expect({ foo => 1 })->to->have->keys(qw/foo bar baz/) };
     };
 
+    subtest respond_to => sub {
+        my $Foo = 'Test::Chai::Test::RespondTo::Foo';
+        my $bar = bless {} => $Foo;
+
+        expect($Foo)->to->respond_to('bar');
+        expect($Foo)->to->not->respond_to('foo');
+        expect($Foo)->itself->to->respond_to('func');
+        expect($Foo)->itself->to->respond_to('bar'); # XXX
+
+        {
+            no strict 'refs';
+            *{$Foo.'::foo'} = sub { };
+            expect($bar)->to->respond_to('foo');
+        }
+
+        # XXX: constructor
+        err { expect($bar)->to->respond_to('baz', 'object') };
+    };
+
+    subtest satisfy => sub {
+        my $matcher = sub { $_[0] == 1 };
+
+        expect(1)->to->satisfy($matcher);
+        err { expect(2)->to->satisfy($matcher) };
+    };
+
+    subtest close_to => sub {
+        expect(1.5)->to->be->close_to(1.0, 0.5);
+        expect(10)->to->be->close_to(20, 20);
+        expect(-10)->to->be->close_to(20, 30);
+
+        err { expect(2)->to->be->close_to(1.0, 0.5) };
+        err { expect(-10)->to->be->close_to(20, 29) };
+        err { expect([ 1.5 ])->to->be->close_to(1.0, 0.5) };
+        err { expect(1.5)->not->to->be->close_to('1.0', 0.5) };
+        err { expect(1.5)->not->to->be->close_to(1.0, 1) };
+    };
+
+	subtest 'include.members' => sub {
+		expect([ 1, 2, 3 ])->to->include->members([]);
+		expect([ 1, 2, 3 ])->to->include->members([ 3, 2 ]);
+		expect([ 1, 2, 3 ])->to->not->include->members([ 8, 4 ]);
+		expect([ 1, 2, 3 ])->to->not->include->members([ 1, 2, 3, 4 ]);
+	};
+
+	subtest 'same.members' => sub {
+		expect([ 5, 4 ])->to->have->same->members([ 4, 5 ]);
+		expect([ 5, 4 ])->to->have->same->members([ 5, 4 ]);
+		expect([ 5, 4 ])->to->not->have->same->members([]);
+		expect([ 5, 4 ])->to->not->have->same->members([ 6, 3 ]);
+		expect([ 5, 4 ])->to->not->have->same->members([ 5, 4, 2 ]);
+	};
+
+    subtest members => sub {
+		expect([ 5, 4 ])->members([ 4, 5 ]);
+		expect([ 5, 4 ])->members([ 5, 4 ]);
+		expect([ 5, 4 ])->not->members([]);
+		expect([ 5, 4 ])->not->members([ 6, 3 ]);
+		expect([ 5, 4 ])->not->members([ 5, 4, 2 ]);
+		expect([{ id => 1 }])->not->members([{ id => 1 }]);
+    };
+
+	subtest 'deep.members' => sub {
+		expect([{ id => 1 }])->deep->members([{ id => 1 }]);
+		expect([{ id => 2 }])->not->deep->members([{ id => 1 }]);
+		err { expect([{ id => 1 }])->deep->members([{ id => 2 }]) };
+	};
 
     subtest 'change' => sub {
         my $obj     = { value => 10, str => 'foo' };

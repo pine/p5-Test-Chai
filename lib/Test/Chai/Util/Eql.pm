@@ -9,7 +9,6 @@ our @EXPORT_OK = qw/eql/;
 use Test::Deep::NoTest qw/eq_deeply/;
 
 sub eql {
-    my $class = shift;
     return eq_deeply(@_);
 }
 

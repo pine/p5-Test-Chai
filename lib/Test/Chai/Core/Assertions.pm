@@ -315,7 +315,13 @@ Assertion->add_method('keys', \&assert_keys);
 Assertion->add_method('key',  \&assert_keys);
 
 # FIXME throws
-# FIXME respondTo
+
+# -----------------------------------------------------------------------------------
+
+use Test::Chai::Core::Assertions::RespondTo qw/assert_respond_to/;
+
+Assertion->add_method('respond_to',  \&assert_respond_to);
+Assertion->add_method('responds_to', \&assert_respond_to);
 
 # -----------------------------------------------------------------------------------
 

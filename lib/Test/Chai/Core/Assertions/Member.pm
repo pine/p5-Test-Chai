@@ -6,11 +6,12 @@ use utf8;
 use Exporter qw/import/;
 our @EXPORT_OK = qw/assert_member/;
 
-use List::MoreUtils qw/all/;
+use List::MoreUtils qw/any all/;
 
 use Test::Chai::Assertion;
 use Test::Chai::Util::Flag qw/flag/;
 use Test::Chai::Util::Eql qw/eql/;
+
 sub Assertion { 'Test::Chai::Assertion' };
 
 sub assert_member {
@@ -29,8 +30,8 @@ sub assert_member {
             is_subset_of($subset, $obj, $cmp),
             'expected #{this} to be a superset of #{act}',
             'expected #{this} to not be a superset of #{act}',
-            obj,
-            subset
+            $obj,
+            $subset
         );
     }
 
@@ -38,8 +39,8 @@ sub assert_member {
         is_subset_of($obj, $subset, $cmp) && is_subset_of($subset, $obj, $cmp),
         'expected #{this} to have the same members as #{act}',
         'expected #{this} to not have the same members as #{act}',
-        obj,
-        subset
+        $obj,
+        $subset
     );
 }
 
@@ -49,8 +50,8 @@ sub is_subset_of {
     return all {
         my $elem = $_;
         return $cmp ?
-            grep { $_ eq $elem } @$superset unless defined $cmp
-
+            any { $cmp->($elem, $_) } @$superset :
+            grep { $_ eq $elem } @$superset;
     } @$subset;
 }
 

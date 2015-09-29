@@ -3,7 +3,12 @@ use warnings;
 use utf8;
 
 use Exporter qw/import/;
-use lib qw/lib/;
+
+use File::Basename qw/dirname/;
+use lib (
+    dirname(__FILE__).'/../lib',
+    dirname(__FILE__).'/lib',
+);
 
 use Test::More;
 use Test::Deep;
