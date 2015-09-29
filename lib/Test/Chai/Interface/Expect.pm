@@ -7,7 +7,9 @@ use Exporter qw/import/;
 our @EXPORT = qw/expect/;
 
 use Test::Chai::Assertion;
+use Test::Chai::AssertionError;
 sub Assertion { 'Test::Chai::Assertion' }
+sub AssertionError { 'Test::Chai::AssertionError' }
 
 my $CLASS = __PACKAGE__;
 
@@ -19,7 +21,14 @@ sub expect {
 
 # expect->fail(actual, expected, [message], [operator])
 sub fail {
-    # FIXME
+    my ($self, $actual, $expected, $message, $operator) = @_;
+
+    my $err = AssertionError->new($message, {
+        actual   => $actual,
+        expected => $expected,
+        operator => $operator,
+    }, $CLASS.'::fail');
+    return Assertion->new->_fail($err->message);
 }
 
 1;

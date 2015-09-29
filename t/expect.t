@@ -26,39 +26,38 @@ sub err (&;&$) {
 
 subtest expect => sub {
     subtest VERSION => sub {
-        ok expect($Test::Chai::VERSION)->to->be->a('Str');
+        expect($Test::Chai::VERSION)->to->be->a('Str');
     };
 
     subtest assertion => sub {
-        ok expect('test')->to->be->a('Str');
-        ok expect('foo')->to->equal('foo');
+        expect('test')->to->be->a('Str');
+        expect('foo')->to->equal('foo');
     };
 
-    # FIXME
-    # subtest fail => sub {
-    #     expect->fail(0, 1, 'this has failed');
-    # };
+    subtest fail => sub {
+        err { expect->fail(0, 1, 'this has failed') };
+    };
 
     subtest true => sub {
-        ok expect(1)->to->be->true;
-        ok expect(0)->to->not->be->true;
+        expect(1)->to->be->true;
+        expect(0)->to->not->be->true;
 
         err { ok not expect('test')->to->be->true };
     };
 
     subtest ok => sub {
-        ok expect(1)->to->be->ok;
-        ok expect(0)->to->not->be->ok;
+        expect(1)->to->be->ok;
+        expect(0)->to->not->be->ok;
 
-        err { ok not expect('')->to->be->ok };
-        err { ok not expect('test')->to->not->be->ok };
+        err { expect('')->to->be->ok };
+        err { expect('test')->to->not->be->ok };
     };
 
     subtest false => sub {
-        ok expect(0)->to->be->false;
-        ok expect(1)->to->not->be->false;
+        expect(0)->to->be->false;
+        expect(1)->to->not->be->false;
 
-        err { ok not expect('')->to->be->false };
+        err { expect('')->to->be->false };
     };
 
     subtest undef => sub {
