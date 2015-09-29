@@ -353,7 +353,9 @@ Assertion->add_method('close_to', \&assert_close_to);
 
 # -----------------------------------------------------------------------------------
 
-# FIXME members
+use Test::Chai::Core::Assertions::Member qw/assert_member/;
+
+Assertion->add_method('members', \&assert_member);
 
 # -----------------------------------------------------------------------------------
 
