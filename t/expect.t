@@ -336,10 +336,10 @@ subtest expect => sub {
             expect({ foo => { bar => 'baz' } })
                 ->to->not->have->deep->property('foo.bar', 'baz', 'blah');
         };
-        # err {
+        err {
             expect({ foo => 5 })
                 ->to->not->have->deep->property('foo.bar', 'baz', 'blah');
-        # };
+        };
     };
 
     subtest 'string()' => sub {
@@ -368,21 +368,19 @@ subtest expect => sub {
         expect([ { a => 1 } ])->to->include({ a => 1 });
         expect([ { a => 1 } ])->to->not->include({ b => 1 });
 
-        err { expect([qw/foo/])->to->include([qw/bar blah/]) };
-        expect([qw/bar foo/])->to->not->include([qw/foo blah/]);
-        # }, "blah: expected [ 'bar', 'foo' ] to not include 'foo'");
-        #
-        # err(function(){
-        # expect({a:1})->to->include({b:2});
-        # }, "expected { a: 1 } to have a property 'b'");
-        #
-        # err(function(){
-        # expect({a:1,b:2})->to->not->include({b:2});
-        # }, "expected { a: 1, b: 2 } to not include { b: 2 }");
-        #
-        # err(function(){
-        # expect([{a:1},{b:2}])->to->not->include({b:2});
-        # }, "expected [ { a: 1 }, { b: 2 } ] to not include { b: 2 }");
+        err { expect([qw/foo/])->to->include('bar', 'blah') };
+        err { expect([qw/bar foo/])->to->not->include('foo', 'blah') };
+
+        err { expect({ a => 1 })->to->include({ b => 2 }) };
+        err { expect({ a => 1, b => 2 })->to->not->include({ b => 2 }) };
+        err { expect([ { a => 1 }, { b => 2 } ])->to->not->include({ b => 2 }) };
+
+        err { expect(1)->to->include(1) };
+        err { expect(42.0)->to->include(42) };
+        err { expect(undef)->to->include(42) };
+        # err { expect(1)->to->not->include(1) }; # FIXME
+        # err { expect(42.0)->to->not->include(42) }; # FIXME
+        # err { expect(undef)->to->not->include(42) }; # FIXME
     };
 
     subtest 'keys(array|Object|arguments)' => sub {
@@ -444,6 +442,9 @@ subtest expect => sub {
         err { expect({ foo => 1 })->to->have->keys(qw/foo bar baz/) };
     };
 
+    # FIXME: chaining
+    # FIXME: throw
+
     subtest respond_to => sub {
         my $Foo = 'Test::Chai::Test::RespondTo::Foo';
         my $bar = bless {} => $Foo;
@@ -459,7 +460,6 @@ subtest expect => sub {
             expect($bar)->to->respond_to('foo');
         }
 
-        # XXX: constructor
         err { expect($bar)->to->respond_to('baz', 'object') };
     };
 

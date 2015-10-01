@@ -17,6 +17,8 @@ sub Util () { 'Test::Chai::Util' }
 sub assert_include {
     my ($self, $val, $msg) = @_;
 
+    # FIXME expectTypes
+
     flag($self, 'message', $msg) if defined $msg;
 
     my $obj      = flag($self, 'object');
@@ -52,6 +54,10 @@ sub assert_include {
 
     elsif (ref $obj eq 'HASH') {
         $expected = grep { $_ eq $val } values %$obj;
+    }
+
+    else {
+        # FIXME
     }
 
     $self->assert(

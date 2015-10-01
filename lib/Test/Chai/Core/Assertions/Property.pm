@@ -8,6 +8,7 @@ our @EXPORT_OK = qw/assert_property/;
 
 use Test::Chai::Util::Flag qw/flag/;
 use Test::Chai::Util::Equal qw/equal/;
+use Test::Chai::Util::Inspect qw/inspect/;
 use Test::Chai::Util::GetPathInfo qw/get_path_info/;
 use Test::Chai::Util::HasProperty qw/has_property/;
 
@@ -16,7 +17,7 @@ sub assert_property {
 
     flag($self, 'message', $msg) if defined $msg;
 
-    my $is_deep      = !!flag($self, 'deep');
+    my $is_deep      = flag($self, 'deep') ? 1 : 0;
     my $descriptor   = $is_deep ? 'deep property ' : 'property ';
     my $negate       = flag($self, 'negate');
     my $obj          = flag($self, 'object');
@@ -32,7 +33,8 @@ sub assert_property {
     if ($negate && @_ - 1 > 1) {
         unless (defined $value) {
             $msg = defined $msg ? "$msg: " : '';
-            # FIXME: throw
+            $self->_fail($msg . inspect($obj) . ' has no ' . $descriptor . inspect($name));
+            return;
         }
     }
 
