@@ -9,10 +9,10 @@ perl:
 
 
 before_script:
-  - cpanm --quiet --notest --skip-satisfied Devel::Cover Devel::Cover::Report::Codecov
+  - cpanm --quiet --notest --skip-satisfied Devel::Cover::Report::Codecov
 
 script:
-  - HARNESS_PERL_SWITCHES="-MDevel::Cover=+ignore,^local/|^t/" prove -r t
+  - HARNESS_PERL_SWITCHES="-MDevel::Cover=+ignore,^local/|^t/|^xt/" prove -r t
 
 after_success:
   - cover -report codecov
