@@ -5,13 +5,16 @@ use utf8;
 
 use parent qw/Test::Builder::Module/;
 
-use Test::Chai::Config;
 use Test::Chai::AssertionError;
 use Test::Chai::Util::Flag qw/flag/;
+use Test::Chai::Util::Reflection qw/
+    add_method
+    add_property
+    add_chainable_method
+/;
 
 # alias
 sub Util ()           { 'Test::Chai::Util'           }
-sub Config ()         { 'Test::Chai::Config'         }
 sub AssertionError () { 'Test::Chai::AssertionError' }
 
 sub new {
@@ -27,17 +30,13 @@ sub new {
     return $self;
 }
 
-sub add_property         { Util->add_property(@_)         }
-sub add_method           { Util->add_method(@_)           }
-sub add_chainable_method { Util->add_chainable_method(@_) }
-
 sub assert {
     my $self = shift;
     my ($expr, $msg, $negateMsg, $expected, $_actual, $show_diff) = @_;
 
     my $ok = Util->test($self, [@_]);
     $show_diff = 0 if defined $show_diff && $show_diff != 1;
-    $show_diff = 0 if Config->show_diff != 1;
+    # $show_diff = 0 if Config->show_diff != 1; # TODO
 
     if (!$ok) {
         my $msg    = Util->get_message($self, [@_]);
