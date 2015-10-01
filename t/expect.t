@@ -60,168 +60,174 @@ subtest expect => sub {
         err { expect('')->to->be->false };
     };
 
-    subtest undef => sub {
-        ok expect(undef)->to->be->undef;
-        ok expect(0)->to->not->be->undef;
+    subtest undefined => sub {
+        expect(undef)->to->be->undef;
+        expect(0)->to->not->be->undef;
 
-        err { ok not expect('')->to->be->undef };
+        err { expect('')->to->be->undef };
+
+        expect(undef)->to->be->undefined;
+        expect(0)->to->not->be->undefined;
+
+        err { expect('')->to->be->undefined };
     };
 
     subtest exist => sub {
         my $foo = 'bar';
         my $bar;
 
-        ok expect($foo)->to->exist;
-        ok expect($bar)->to->not->exist;
+        expect($foo)->to->exist;
+        expect($bar)->to->not->exist;
     };
 
-    subtest equal => sub {
+    subtest '.equal' => sub {
         my $foo;
-        ok expect(undef)->to->equal($foo);
+        expect(undef)->to->equal($foo);
 
-        err { ok not expect(undef)->to->equal(0) };
+        err { expect(undef)->to->equal(0) };
     };
 
     subtest typeof => sub {
-        ok expect('test')->to->be->a('Str');
+        expect('test')->to->be->a('Str');
 
-        err { ok not expect('test')->to->not->be->a('Str') };
+        err { expect('test')->to->not->be->a('Str') };
 
-        ok expect(5)->to->be->a('Int');
-        ok expect('5')->to->be->a('Int');
-        ok expect(1)->to->be->a('Bool');
-        ok expect([])->to->be->a('ArrayRef');
-        ok expect({})->to->be->a('HashRef');
-        ok expect(sub {})->to->be->a('CodeRef');
-        ok expect(undef)->to->be->a('Undef');
+        expect(5)->to->be->a('Int');
+        expect('5')->to->be->a('Int');
+        expect(1)->to->be->a('Bool');
+        expect([])->to->be->a('ArrayRef');
+        expect({})->to->be->a('HashRef');
+        expect(sub {})->to->be->a('CodeRef');
+        expect(undef)->to->be->a('Undef');
 
-        err { ok not expect(5)->to->not->be->a('Int') };
+        err { expect(5)->to->not->be->a('Int') };
     };
 
     subtest instanceof => sub {
         my $foo = Test::MockObject->new;
         $foo->set_isa('Example::Foo');
 
-        ok expect($foo)->to->be->an->instance_of('Example::Foo');
-        err { ok not expect(3)->to->be->an->instance_of('Example::Foo') };
+        expect($foo)->to->be->an->instance_of('Example::Foo');
+        err { expect(3)->to->be->an->instance_of('Example::Foo') };
     };
 
     subtest 'within(start, finish)' => sub {
-        ok expect(5)->to->be->within(5, 10);
-        ok expect(5)->to->be->within(3, 6);
-        ok expect(5)->to->be->within(3, 5);
-        ok expect(5)->to->not->be->within(1, 3);
-        ok expect('foo')->to->have->length->within(2, 4);
-        ok expect([ 1, 2, 3 ])->to->have->length->within(2, 4);
+        expect(5)->to->be->within(5, 10);
+        expect(5)->to->be->within(3, 6);
+        expect(5)->to->be->within(3, 5);
+        expect(5)->to->not->be->within(1, 3);
+        expect('foo')->to->have->length->within(2, 4);
+        expect([ 1, 2, 3 ])->to->have->length->within(2, 4);
 
-        err { ok not expect(5)->to->not->be->within(4, 6) };
-        err { ok not expect(10)->to->be->within(50, 100) };
-        err { ok not expect([ 1, 2, 3 ])->to->have->length->within(5, 7) };
+        err { expect(5)->to->not->be->within(4, 6) };
+        err { expect(10)->to->be->within(50, 100) };
+        err { expect([ 1, 2, 3 ])->to->have->length->within(5, 7) };
     };
 
     subtest 'above(n)' => sub {
-        ok expect(5)->to->be->above(2);
-        ok expect(5)->to->be->greater_than(2);
-        ok expect(5)->to->not->be->above(5);
-        ok expect(5)->to->not->be->above(6);
-        ok expect('foo')->to->have->length->above(2);
+        expect(5)->to->be->above(2);
+        expect(5)->to->be->greater_than(2);
+        expect(5)->to->not->be->above(5);
+        expect(5)->to->not->be->above(6);
+        expect('foo')->to->have->length->above(2);
 
-        err { ok not expect(5)->to->be->above(6) };
-        err { ok not expect(10)->to->not->be->above(6) };
-        err { ok not expect('foo')->to->have->length->above(4) };
-        err { ok not expect([ 1, 2, 3 ])->to->have->length->above(4) };
+        err { expect(5)->to->be->above(6) };
+        err { expect(10)->to->not->be->above(6) };
+        err { expect('foo')->to->have->length->above(4) };
+        err { expect([ 1, 2, 3 ])->to->have->length->above(4) };
     };
 
     subtest 'least(n)' => sub {
-        ok expect(5)->to->be->at->least(2);
-        ok expect(5)->to->be->at->least(5);
-        ok expect(5)->to->not->be->at->least(6);
-        ok expect('foo')->to->have->length->of->at->least(2);
-        ok expect([ 1, 2, 3 ])->to->have->length->of->at->least(2);
+        expect(5)->to->be->at->least(2);
+        expect(5)->to->be->at->least(5);
+        expect(5)->to->not->be->at->least(6);
+        expect('foo')->to->have->length->of->at->least(2);
+        expect([ 1, 2, 3 ])->to->have->length->of->at->least(2);
 
-        err { ok not expect(5)->to->be->at->least(6) };
-        err { ok not expect(10)->to->not->be->at->least(6) };
-        err { ok not expect('foo')->to->have->length->of->at->least(4) };
-        err { ok not expect([ 1, 2, 3, 4 ])->to->not->have->length->of->at->least(4) };
+        err { expect(5)->to->be->at->least(6) };
+        err { expect(10)->to->not->be->at->least(6) };
+        err { expect('foo')->to->have->length->of->at->least(4) };
+        err { expect([ 1, 2, 3 ])->to->have->length->of->at->least(4, 'blah') };
+        err { expect([ 1, 2, 3, 4 ])->to->not->have->length->of->at->least(4) };
     };
 
     subtest 'below(n)' => sub {
-        ok expect(2)->to->be->below(5);
-        ok expect(2)->to->be->less_than(5);
-        ok expect(2)->to->be->lt(5);
-        ok expect(2)->to->not->be->below(2);
-        ok expect(2)->to->not->be->below(1);
-        ok expect('foo')->to->have->length->below(4);
-        ok expect([ 1, 2, 3 ])->to->have->length->below(4);
+        expect(2)->to->be->below(5);
+        expect(2)->to->be->less_than(5);
+        expect(2)->to->be->lt(5);
+        expect(2)->to->not->be->below(2);
+        expect(2)->to->not->be->below(1);
+        expect('foo')->to->have->length->below(4);
+        expect([ 1, 2, 3 ])->to->have->length->below(4);
 
-        err { ok not expect(6)->to->be->below(5) };
-        err { ok not expect(6)->to->not->be->below(10) };
-        err { ok not expect('foo')->to->have->length->below(2) };
-        err { ok not expect([ 1, 2, 3 ])->to->have->length->below(2) };
+        err { expect(6)->to->be->below(5) };
+        err { expect(6)->to->not->be->below(10) };
+        err { expect('foo')->to->have->length->below(2) };
+        err { expect([ 1, 2, 3 ])->to->have->length->below(2) };
     };
 
     subtest 'most(n)' => sub {
-        ok expect(2)->to->be->at->most(5);
-        ok expect(2)->to->be->at->most(2);
-        ok expect(2)->to->not->be->at->most(1);
-        ok expect(2)->to->not->be->at->most(1);
-        ok expect('foo')->to->have->length->of->at->most(4);
-        ok expect([ 1, 2, 3 ])->to->have->length->of->at->most(4);
+        expect(2)->to->be->at->most(5);
+        expect(2)->to->be->at->most(2);
+        expect(2)->to->not->be->at->most(1);
+        expect(2)->to->not->be->at->most(1);
+        expect('foo')->to->have->length->of->at->most(4);
+        expect([ 1, 2, 3 ])->to->have->length->of->at->most(4);
 
-        err { ok not expect(6)->to->be->at->most(5) };
-        err { ok not expect(6)->to->not->be->at->most(10) };
-        err { ok not expect('foo')->to->have->length->of->at->most(2) };
-        err { ok not expect([ 1, 2, 3 ])->to->have->length->of->at->most(2) };
-        err { ok not expect([ 1, 2 ])->to->not->have->length->of->at->most(2) };
+        err { expect(6)->to->be->at->most(5) };
+        err { expect(6)->to->not->be->at->most(10) };
+        err { expect('foo')->to->have->length->of->at->most(2) };
+        err { expect([ 1, 2, 3 ])->to->have->length->of->at->most(2) };
+        err { expect([ 1, 2 ])->to->not->have->length->of->at->most(2) };
     };
 
     subtest 'match(regexp)' => sub {
-        ok expect('foobar')->to->match(qr/^foo/);
-        ok expect('foobar')->to->matches(qr/^foo/);
-        ok expect('foobar')->to->not->match(qr/^bar/);
+        expect('foobar')->to->match(qr/^foo/);
+        expect('foobar')->to->matches(qr/^foo/);
+        expect('foobar')->to->not->match(qr/^bar/);
 
-        err { ok not expect('foobar')->to->match(qr/^bar/i) };
-        err { ok not expect('foobar')->to->matches(qr/^bar/i) };
-        err { ok not expect('foobar')->to->not->match(qr/^foo/i) };
+        err { expect('foobar')->to->match(qr/^bar/i) };
+        err { expect('foobar')->to->matches(qr/^bar/i) };
+        err { expect('foobar')->to->not->match(qr/^foo/i) };
     };
 
     subtest 'length(n)' => sub {
-        ok expect('test')->to->have->length(4);
-        ok expect('test')->to->not->have->length(3);
-        ok expect([ 1, 2, 3 ])->to->have->length(3);
+        expect('test')->to->have->length(4);
+        expect('test')->to->not->have->length(3);
+        expect([ 1, 2, 3 ])->to->have->length(3);
 
-        err { ok not expect(4)->to->have->length(3) };
-        err { ok not expect('asd')->to->not->have->length(3) };
+        err { expect(4)->to->have->length(3) };
+        err { expect('asd')->to->not->have->length(3) };
     };
 
     subtest eql => sub {
-        ok expect('test')->to->eql('test');
-        ok expect({ foo => 'bar' })->to->eql({ foo => 'bar' });
-        ok expect(1)->to->eql(1);
-        ok expect('4')->to->eql(4);
+        expect('test')->to->eql('test');
+        expect({ foo => 'bar' })->to->eql({ foo => 'bar' });
+        expect(1)->to->eql(1);
+        expect('4')->to->eql(4);
 
-        err { ok not expect(4)->to->eql(3) };
+        err { expect(4)->to->eql(3) };
     };
 
     subtest 'equal(val)' => sub {
-        ok expect('test')->to->equal('test');
-        ok expect(1)->to->equal(1);
-        ok expect('4')->to->equal(4);
+        expect('test')->to->equal('test');
+        expect(1)->to->equal(1);
+        expect('4')->to->equal(4);
 
-        err { ok not expect(4)->to->equal(3) };
+        err { expect(4)->to->equal(3) };
     };
 
     subtest 'deep.equal(val)' => sub {
-        ok expect({ foo => 'bar' })->to->deep->equal({ foo => 'bar' });
-        ok expect({ foo => 'bar' })->not->to->deep->equal({ foo => 'baz' });
+        expect({ foo => 'bar' })->to->deep->equal({ foo => 'bar' });
+        expect({ foo => 'bar' })->not->to->deep->equal({ foo => 'baz' });
     };
 
     subtest 'deep.equal(/regexp/)' => sub {
-        ok expect(qr/a/)->to->deep->equal(qr/a/);
-        ok expect(qr/a/)->not->to->deep->equal(qr/b/);
-        ok expect(qr/a/)->not->to->deep->equal({});
-        ok expect(qr/a/m)->to->deep->equal(qr/a/m);
-        ok expect(qr/a/m)->not->to->deep->equal(qr/b/m);
+        expect(qr/a/)->to->deep->equal(qr/a/);
+        expect(qr/a/)->not->to->deep->equal(qr/b/);
+        expect(qr/a/)->not->to->deep->equal({});
+        expect(qr/a/m)->to->deep->equal(qr/a/m);
+        expect(qr/a/m)->not->to->deep->equal(qr/b/m); # TODO
     };
 
     # FIXME deep.equal(Date)
@@ -255,8 +261,8 @@ subtest expect => sub {
     };
 
     subtest 'property(name)' => sub {
-        # expect('test')->to->have->property('length'); # FIXME
-        # expect(4)->to->not->have->property('length');
+        expect('test')->to->have->property('length');
+        expect(4)->to->have->property('length'); # XXX
 
         expect({ 'foo.bar' => 'baz' })->to->have->property('foo.bar');
         expect({ foo => { bar => 'baz' } })->to->not->have->property('foo.bar');
@@ -266,13 +272,11 @@ subtest expect => sub {
 
         expect({ 'foo.bar[]' => 'baz'})->to->have->property('foo.bar[]');
 
-        # err { # FIXME
-        #   expect('asd')->to->have->property('foo');
-        # };
+        err { expect('asd')->to->have->property('foo') };
         err { expect({ foo => { bar => 'baz' } })->to->have->property('foo.bar') };
     };
 
-    subtest 'deep->property(name)' => sub {
+    subtest 'deep.property(name)' => sub {
         expect({ 'foo.bar' => 'baz'})->to->not->have->deep->property('foo.bar');
         expect({ foo => { bar => 'baz' } })->to->have->deep->property('foo.bar');
 
@@ -285,8 +289,7 @@ subtest expect => sub {
 
 
     subtest 'property(name, val)' => sub {
-        # expect('test').to.have.property('length', 4); # FIXME
-        # expect('asd').to.have.property('constructor', String);
+        expect('test')->to->have->property('length', 4);
 
         my $deep_obj = {
             green => { tea => 'matcha' },
@@ -299,7 +302,7 @@ subtest expect => sub {
         expect($deep_obj)->to->have->property('teas')
             ->that->is->an('ArrayRef')
             ->with->deep->property('[2]')
-            ->that->deep->equals({ tea => 'konacha' });
+                ->that->deep->equals({ tea => 'konacha' });
 
         err { expect($deep_obj)->to->have->deep->property('teas[3]') };
         err { expect($deep_obj)->to->have->deep->property('teas[3]', 'bar') };
@@ -316,21 +319,27 @@ subtest expect => sub {
         err { expect($arr)->to->have->deep->property('[2][1]', 'none') };
         err { expect($arr)->to->have->deep->property('[0][3]', 'none') };
 
-        # err(function(){
-        #   expect('asd').to.have.property('length', 4, 'blah');
-        # }, "blah: expected 'asd' to have a property 'length' of 4, but got 3");
-        #
-        # err(function(){
-        #   expect('asd').to.not.have.property('length', 3, 'blah');
-        # }, "blah: expected 'asd' to not have a property 'length' of 3");
-        #
-        # err(function(){
-        #   expect('asd').to.not.have.property('foo', 3, 'blah');
-        # }, "blah: 'asd' has no property 'foo'");
-        #
-        # err(function(){
-        #   expect('asd').to.have.property('constructor', Number, 'blah');
-        # }, "blah: expected 'asd' to have a property 'constructor' of [Function: Number], but got [Function: String]");
+        err { expect('asd')->to->have->property('length', 4, 'blah') };
+        err { expect('asd')->to->not->have->property('length', 3, 'blah') };
+        err { expect('asd')->to->not->have->property('foo', 3, 'blah') };
+    };
+
+    subtest 'deep.property(name, val)' => sub {
+        expect({ foo => { bar => 'baz' } })
+            ->to->have->deep->property('foo.bar', 'baz');
+
+        err {
+            expect({ foo => { bar => 'baz' } })
+                ->to->have->deep->property('foo.bar', 'quux', 'blah');
+        };
+        err {
+            expect({ foo => { bar => 'baz' } })
+                ->to->not->have->deep->property('foo.bar', 'baz', 'blah');
+        };
+        # err {
+            expect({ foo => 5 })
+                ->to->not->have->deep->property('foo.bar', 'baz', 'blah');
+        # };
     };
 
     subtest 'string()' => sub {

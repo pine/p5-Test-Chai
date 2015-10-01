@@ -30,6 +30,10 @@ sub has_property {
         return 0 <= $name && $name < length $obj;
     }
 
+    elsif ($name eq 'length' && defined $obj && !ref $obj) {
+        return 1;
+    }
+
     return 0;
 }
 

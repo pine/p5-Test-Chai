@@ -68,7 +68,7 @@ sub _get_path_value {
                 }
             }
 
-            else {
+            elsif (ref $tmp eq 'HASH') {
                 if (defined $part->{p}) {
                     $tmp = $tmp->{$part->{p}};
                 }
@@ -76,6 +76,10 @@ sub _get_path_value {
                 elsif (defined $part->{i}) {
                     $tmp = $tmp->{$part->{i}};
                 }
+            }
+
+            else {
+                $tmp = undef;
             }
 
             if ($i == $l - 1) {

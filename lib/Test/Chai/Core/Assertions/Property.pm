@@ -22,7 +22,12 @@ sub assert_property {
     my $obj          = flag($self, 'object');
     my $path_info    = $is_deep ? get_path_info($name, $obj) : undef;
     my $has_property = $is_deep ? $path_info->{exists} : has_property($name, $obj);
-    my $value        = $is_deep ? $path_info->{value} : $obj->{$name};
+
+    my $value =
+        $is_deep     ? $path_info->{value} :
+        ref $obj     ? $obj->{$name}       :
+        defined $obj ? length $obj         :
+                       undef;
 
     if ($negate && @_ - 1 > 1) {
         unless (defined $value) {
