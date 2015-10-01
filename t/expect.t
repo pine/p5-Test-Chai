@@ -42,7 +42,7 @@ subtest expect => sub {
         expect(1)->to->be->true;
         expect(0)->to->not->be->true;
 
-        err { ok not expect('test')->to->be->true };
+        err { expect('test')->to->be->true };
     };
 
     subtest ok => sub {
@@ -80,7 +80,7 @@ subtest expect => sub {
         expect($bar)->to->not->exist;
     };
 
-    subtest '.equal' => sub {
+    subtest '.equal()' => sub {
         my $foo;
         expect(undef)->to->equal($foo);
 
