@@ -3,13 +3,12 @@ use strict;
 use warnings;
 use utf8;
 
-use Scalar::Util qw/blessed/;
-
 use Exporter qw/import/;
 our @EXPORT_OK = qw/assert_instance_of/;
 
-use Test::Chai::Util;
-sub flag { Test::Chai::Util->flag(@_) }
+use Scalar::Util qw/blessed/;
+
+use Test::Chai::Util::Flag qw/flag/;
 
 sub assert_instance_of {
     my ($self, $type, $msg) = @_;

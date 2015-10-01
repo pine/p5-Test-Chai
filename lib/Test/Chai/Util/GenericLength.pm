@@ -1,13 +1,13 @@
-package Test::Chai::Util::Length;
+package Test::Chai::Util::GenericLength;
 use strict;
 use warnings;
 use utf8;
 
 use Exporter qw/import/;
-our @EXPORT_OK = qw/length/;
+our @EXPORT_OK = qw/generic_length/;
 
-sub length {
-    my ($class, $obj) = @_;
+sub generic_length {
+    my $obj = shift;
 
     if (ref $obj eq 'ARRAY') {
         return scalar @$obj;

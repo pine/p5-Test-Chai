@@ -6,9 +6,8 @@ use utf8;
 use Exporter qw/import/;
 our @EXPORT_OK = qw/assert_within/;
 
-use Test::Chai::Util;
-sub Util () { 'Test::Chai::Util' }
-sub flag    { Test::Chai::Util->flag(@_) }
+use Test::Chai::Util::Flag qw/flag/;
+use Test::Chai::Util::GenericLength qw/generic_length/;
 
 sub assert_within {
     my ($self, $start, $finish, $msg) = @_;
@@ -18,7 +17,7 @@ sub assert_within {
     my $range = $start . '..' . $finish;
 
     if (flag($self, 'do_length')) {
-        my $len = Util->length($obj);
+        my $len = generic_length($obj);
         return $self->assert(
             $len >= $start && $len < $finish,
             'expected #{this} to have a length within ' . $range,

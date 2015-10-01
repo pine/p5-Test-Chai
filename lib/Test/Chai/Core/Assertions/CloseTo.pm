@@ -6,8 +6,7 @@ use utf8;
 use Exporter qw/import/;
 our @EXPORT_OK = qw/assert_close_to/;
 
-use Test::Chai::Util;
-sub flag { Test::Chai::Util->flag(@_) }
+use Test::Chai::Util::Flag qw/flag/;
 
 sub assert_close_to {
     my ($self, $expected, $delta, $msg) = @_;

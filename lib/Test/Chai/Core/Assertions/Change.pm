@@ -6,10 +6,7 @@ use utf8;
 use Exporter qw/import/;
 our @EXPORT_OK = qw/assert_change/;
 
-use Test::Chai::Assertion;
 use Test::Chai::Util::Flag qw/flag/;
-
-sub Assertion { 'Test::Chai::Assertion' }
 
 sub assert_change {
     my ($self, $object, $prop, $msg) = @_;
@@ -17,8 +14,8 @@ sub assert_change {
     flag($self, 'message', $msg) if defined $msg;
     my $fn = flag($self, 'object');
 
-    Assertion->new($object, $msg)->to->have->property($prop);
-    Assertion->new($fn)->is->a('CodeRef');
+    ref($self)->new($object, $msg)->to->have->property($prop);
+    ref($self)->new($fn)->is->a('CodeRef');
 
     my $initial = $object->{$prop};
     $fn->();

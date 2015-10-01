@@ -5,50 +5,39 @@ use utf8;
 
 
 use Test::Deep::NoTest qw/eq_deeply/;
-use Mouse::Util::TypeConstraints ();
 use Scalar::Util qw/looks_like_number blessed/;
 use List::MoreUtils qw/any/;
 use DDP;
 
+use Test::Chai::Util::Flag qw/flag/;
 use Test::Chai::Util::GetPathInfo qw/get_path_info/;
 use Test::Chai::Util::HasProperty qw/has_property/;
+use Test::Chai::Util::ObjDisplay qw/obj_display/;
 
 sub test {
     my ($class, $obj, $args) = @_;
 
-    my $negate = $class->flag($obj, 'negate');
+    my $negate = flag($obj, 'negate');
     my $expr   = $args->[0];
 
     return defined $negate && $negate ? !$expr : $expr;
 }
 
-sub matcher {
-    my ($class, $type) = @_;
-    return $class->is_type($type);
-}
-
-sub is_type {
-    my $class = shift;
-
-    my $constraint = Mouse::Util::TypeConstraints::find_or_create_isa_type_constraint(@_);
-    return sub { $constraint->check(@_) };
-}
-
 sub get_message {
     my ($class, $obj, $args) = @_;
 
-    my $negate   = $class->flag($obj, 'negate');
-    my $val      = $class->flag($obj, 'object');
+    my $negate   = flag($obj, 'negate');
+    my $val      = flag($obj, 'object');
     my $expected = $args->[3];
     my $actual   = $class->get_actual($obj, $args);
     my $msg      = defined $negate && $negate ? $args->[2] : $args->[1];
-    my $flag_msg = $class->flag($obj, 'message');
+    my $flag_msg = flag($obj, 'message');
 
     $msg = $msg->() if ref $msg eq 'CODE';
     $msg = defined $msg ? $msg : '';
-    $msg =~ s/#{this}/@{[$class->obj_display($val)]}/g;
-    $msg =~ s/#{act}/@{[$class->obj_display($actual)]}/g;
-    $msg =~ s/#{exp}/@{[$class->obj_display($expected)]}/g;
+    $msg =~ s/#{this}/@{[obj_display($val)]}/g;
+    $msg =~ s/#{act}/@{[obj_display($actual)]}/g;
+    $msg =~ s/#{exp}/@{[obj_display($expected)]}/g;
 
     return defined $flag_msg ? $flag_msg . ': ' . $msg : $msg;
 }
@@ -56,37 +45,6 @@ sub get_message {
 sub get_actual {
     my ($class, $obj, $args) = @_;
     return @$args > 4 ? $args->[4] : $obj->_obj;
-}
-
-sub obj_display {
-    my ($class, $obj) = @_;
-    return np($obj); # FIXME
-}
-
-sub flag {;
-    my ($class, $obj, $key, $value) = @_;
-
-    my $flags = $obj->{__flags};
-    $flags = $obj->{__flags} = {} unless defined $flags;
-
-    if (scalar @_ - 1 == 3) {
-        $flags->{$key} = $value;
-        return undef;
-    }
-
-    else {
-        return $flags->{$key};
-    }
-}
-
-sub eql {
-    my $class = shift;
-    return eq_deeply(@_);
-}
-
-
-sub get_name {
-
 }
 
 sub add_property {
@@ -144,20 +102,6 @@ sub add_chainable_method {
 
         return $_[0];
     };
-}
-
-sub length {
-    my ($class, $obj) = @_;
-
-    if (ref $obj eq 'ARRAY') {
-        return scalar @$obj;
-    }
-
-    elsif (ref $obj eq 'HASH') {
-        return scalar keys %$obj;
-    }
-
-    return length $obj;
 }
 
 1;

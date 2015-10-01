@@ -7,14 +7,12 @@ use parent qw/Test::Builder::Module/;
 
 use Test::Chai::Config;
 use Test::Chai::AssertionError;
+use Test::Chai::Util::Flag qw/flag/;
 
 # alias
 sub Util ()           { 'Test::Chai::Util'           }
 sub Config ()         { 'Test::Chai::Config'         }
 sub AssertionError () { 'Test::Chai::AssertionError' }
-
-sub flag { Util->flag(@_) }
-
 
 sub new {
     my ($class, $obj, $msg, $stack) = @_;
@@ -23,8 +21,8 @@ sub new {
     bless $self => $class;
 
     # Util->flag($self, 'ssfi' FIXME
-    Util->flag($self, 'object',  $obj);
-    Util->flag($self, 'message', $msg);
+    flag($self, 'object',  $obj);
+    flag($self, 'message', $msg);
 
     return $self;
 }

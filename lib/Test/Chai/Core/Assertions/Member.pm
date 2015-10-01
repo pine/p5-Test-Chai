@@ -8,7 +8,6 @@ our @EXPORT_OK = qw/assert_member/;
 
 use List::MoreUtils qw/any all/;
 
-use Test::Chai::Assertion;
 use Test::Chai::Util::Flag qw/flag/;
 use Test::Chai::Util::Eql qw/eql/;
 
@@ -20,8 +19,8 @@ sub assert_member {
     flag($self, 'message', $msg) if defined $msg;
     my $obj = flag($self, 'object');
 
-    Assertion->new($obj)->to->be->an('ArrayRef');
-    Assertion->new($subset)->to->be->an('ArrayRef');
+    ref($self)->new($obj)->to->be->an('ArrayRef');
+    ref($self)->new($subset)->to->be->an('ArrayRef');
 
     my $cmp = flag($self, 'deep') ? sub { eql(@_) } : undef;
 

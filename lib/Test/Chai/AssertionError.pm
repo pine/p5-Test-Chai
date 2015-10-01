@@ -6,6 +6,7 @@ use utf8;
 use Data::Structure::Util qw/unbless/;
 
 use Test::Chai::Util;
+use Test::Chai::Util::ObjDisplay qw/obj_display/;
 sub Util { 'Test::Chai::Util' }
 
 sub exclude {
@@ -60,7 +61,7 @@ sub message {
 
     my $extend = exclude('constructor', 'toJSON', 'stack');
     my $props  = $extend->({ name => $self->name }, unbless($self));
-    return Util->obj_display($props);
+    return obj_display($props);
 }
 
 1;

@@ -8,8 +8,7 @@ our @EXPORT_OK = qw/assert_keys/;
 
 use List::MoreUtils qw/all any/;
 
-use Test::Chai::Util;
-sub flag { Test::Chai::Util->flag(@_) }
+use Test::Chai::Util::Flag qw/flag/;
 
 sub assert_keys {
     my $self = shift;

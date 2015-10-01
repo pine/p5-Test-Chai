@@ -4,16 +4,9 @@ use warnings;
 use utf8;
 
 use Exporter qw/import/;
-our @EXPORT_OK = qw/
-    assert_decrease
-/;
+our @EXPORT_OK = qw/assert_decrease/;
 
-use Test::Chai::Util;
-use Test::Chai::Assertion;
-
-sub Util      () { 'Test::Chai::Util'         }
-sub Assertion () { 'Test::Chai::Assertion'    }
-sub flag         { Util->flag(@_)             }
+use Test::Chai::Util::Flag qw/flag/;
 
 sub assert_decrease {
     my ($self, $object, $prop, $msg) = @_;
@@ -21,8 +14,8 @@ sub assert_decrease {
     flag($self, 'message', $msg) if defined $msg;
     my $fn = flag($self, 'object');
 
-    # Assertion->new->($obj, $msg)->to->have->property # FIXME
-    Assertion->new($fn)->is->a('CodeRef');
+    ref($self)->new($object, $msg)->to->have->property($prop);
+    ref($self)->new($fn)->is->a('CodeRef');
 
     my $initial = $object->{$prop};
     $fn->();

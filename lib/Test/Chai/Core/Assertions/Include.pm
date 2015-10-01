@@ -9,10 +9,8 @@ our @EXPORT_OK = qw/
     assert_include_chaining_behavior
 /;
 
-use Test::Chai::Util;
 use Test::Chai::Util::Flag qw/flag/;
-use Test::Chai::Assertion;
-sub Util () { 'Test::Chai::Util' }
+use Test::Chai::Util::Eql qw/eql/;
 
 sub assert_include {
     my ($self, $val, $msg) = @_;
@@ -26,7 +24,7 @@ sub assert_include {
 
     if (ref $obj eq 'ARRAY' && ref $val eq 'HASH') {
         for my $i (keys $obj) {
-            if (Util->eql($obj->[$i], $val)) {
+            if (eql($obj->[$i], $val)) {
                 $expected = 1;
                 last;
             }
@@ -36,7 +34,7 @@ sub assert_include {
     elsif (ref $val eq 'HASH') {
         if (!flag($self, 'negate')) {
             for my $k (keys $val) {
-                Test::Chai::Assertion->new($obj)->property($k, $val->{$k});
+                ref($self)->new($obj)->property($k, $val->{$k});
             }
             return;
         }
@@ -45,7 +43,7 @@ sub assert_include {
         for my $k (keys $val) {
             $subset->{$k} = $obj->{$k};
         }
-        $expected = Util->eql($subset, $val);
+        $expected = eql($subset, $val);
     }
 
     elsif (ref $obj eq 'ARRAY') {
@@ -60,7 +58,7 @@ sub assert_include {
         # FIXME
     }
 
-    $self->assert(
+    return $self->assert(
         $expected,
         'expected #{this} to include ' . $val, # FIXME
         'expected #{this} to not include ' . $val
