@@ -11,8 +11,6 @@ use List::MoreUtils qw/any all/;
 use Test::Chai::Util::Flag qw/flag/;
 use Test::Chai::Util::Eql qw/eql/;
 
-sub Assertion { 'Test::Chai::Assertion' };
-
 sub assert_member {
     my ($self, $subset, $msg) = @_;
 
