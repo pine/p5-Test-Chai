@@ -55,7 +55,7 @@ sub assert_include {
     }
 
     else {
-        # FIXME
+        $expected = defined $obj && index($obj, $val) > -1;
     }
 
     return $self->assert(

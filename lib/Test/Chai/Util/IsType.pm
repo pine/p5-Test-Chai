@@ -9,9 +9,9 @@ our @EXPORT_OK = qw/is_type/;
 use Mouse::Util::TypeConstraints ();
 
 sub is_type {
-    my ($type, $value) = @_;
+    my ($obj, $type) = @_;
     my $constraint = Mouse::Util::TypeConstraints::find_or_create_isa_type_constraint($type);
-    return $constraint->check($value);
+    return $constraint->check($obj);
 }
 
 1;

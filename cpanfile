@@ -3,6 +3,7 @@ requires 'perl', '5.010000';
 # alphabet order
 requires 'Data::Structure::Util', '0.16';
 requires 'Data::Printer', '0.36';
+requires 'Exception::Tiny', '0.2.1';
 requires 'List::MoreUtils', '0.413';
 requires 'Mouse', '2.4.5';
 requires 'Scalar::Util', '1.42';

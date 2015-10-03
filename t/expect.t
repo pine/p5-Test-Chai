@@ -3,10 +3,12 @@ use warnings FATAL => 'all';
 use utf8;
 
 use Test::MockObject;
-use Test::Chai qw/expect/;
+use Exception::Tiny;
 
 use t::Util;
-use Test::Chai::Test;
+use Test::Chai::Test::RespondTo;
+use Test::Chai::Test::Throw;
+use Test::Chai qw/expect/;
 
 sub err (&;&$) {
     my ($code, $msg) = @_;
@@ -375,9 +377,9 @@ subtest expect => sub {
         err { expect({ a => 1, b => 2 })->to->not->include({ b => 2 }) };
         err { expect([ { a => 1 }, { b => 2 } ])->to->not->include({ b => 2 }) };
 
-        err { expect(1)->to->include(1) };
-        err { expect(42.0)->to->include(42) };
-        err { expect(undef)->to->include(42) };
+        # err { expect(1)->to->include(1) };
+        # err { expect(42.0)->to->include(42) };
+        # err { expect(undef)->to->include(42) };
         # err { expect(1)->to->not->include(1) }; # FIXME
         # err { expect(42.0)->to->not->include(42) }; # FIXME
         # err { expect(undef)->to->not->include(42) }; # FIXME
@@ -443,7 +445,49 @@ subtest expect => sub {
     };
 
     # FIXME: chaining
-    # FIXME: throw
+
+    subtest throw => sub {
+        my $specific_error = { message => 'boo' };
+        my $good_fn        = sub { 1 == 1 };
+        my $bad_fn         = sub { Exception::Tiny->throw(message => 'testing') };
+        my $ref_err_fn     = sub { Test::Chai::Test::Throw::ReferenceError->throw };
+
+        expect($good_fn)->to->not->throw;
+        expect($good_fn)->to->not->throw('Exception::Tiny');
+        expect($good_fn)->to->not->throw($specific_error);
+        expect($bad_fn)->to->throw;
+        expect($bad_fn)->to->throw('Exception::Tiny');
+        expect($bad_fn)->to->not->throw('Test::Chai::Test::Throw::ReferenceError');
+        expect($bad_fn)->to->not->throw($specific_error);
+        expect($ref_err_fn)->to->throw;
+        expect($ref_err_fn)->to->throw('Test::Chai::Test::Throw::ReferenceError');
+        expect($ref_err_fn)->to->throw('Exception::Tiny');
+        expect($ref_err_fn)->to->not->throw('Test::Chai::Test::Throw::TypeError');
+        expect($ref_err_fn)->to->not->throw($specific_error);
+
+        expect($bad_fn)->to->throw(qr/testing/);
+        expect($bad_fn)->to->not->throw(qr/hello/);
+        expect($bad_fn)->to->not->throw(qr/hello/);
+
+        expect($bad_fn)->to->throw('Exception::Tiny', qr/testing/);
+        expect($bad_fn)->to->throw('Exception::Tiny', 'testing');
+
+        err { expect($good_fn)->to->throw };
+        err { expect($good_fn)->to->throw('Test::Chai::Test::Throw::ReferenceError') };
+        err { expect($good_fn)->to->throw($specific_error) };
+        err { expect($bad_fn)->to->not->throw };
+        err { expect($bad_fn)->to->throw('Test::Chai::Test::Throw::ReferenceError') };
+        err { expect($bad_fn)->to->throw($specific_error) };
+        err { expect($bad_fn)->to->not->throw('Exception::Tiny') };
+        err { expect($ref_err_fn)->to->not->throw('Test::Chai::Test::Throw::ReferenceError') };
+        err { expect($specific_error)->to->throw('Test::Chai::Test::Throw::ReferenceError') };
+        err { expect($specific_error)->to->not->throw($specific_error) };
+
+        err { expect($bad_fn)->to->not->throw(qr/testing/) };
+        err { expect($bad_fn)->to->throw(qr/hello/) };
+        err { expect($bad_fn)->to->throw('Exception::Tiny', qr/hello/, 'blah') };
+        err { expect($bad_fn)->to->throw('Exception::Tiny', 'hello', 'blah') };
+    };
 
     subtest respond_to => sub {
         my $Foo = 'Test::Chai::Test::RespondTo::Foo';

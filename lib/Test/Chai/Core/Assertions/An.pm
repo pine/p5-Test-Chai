@@ -18,7 +18,7 @@ sub assert_an {
     my $article = $type =~ /^[aeiou]/i ? 'an ' : 'a ';
 
     return $self->assert(
-        is_type($type, $obj),
+        is_type($obj, $type),
         'expected #{this} to be ' . $article . $type,
         'expected #{this} not to be ' . $article . $type
     ) ? undef : 0;

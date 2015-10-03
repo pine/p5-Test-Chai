@@ -10,6 +10,7 @@ use Try::Lite;
 
 use Test::Chai::Util::Flag qw/flag/;
 use Test::Chai::Util::IsType qw/is_type/;
+use Test::Chai::Util::ObjDisplay qw/obj_display/;
 
 sub assert_throws {
     my ($self, $pkg, $err_msg, $msg) = @_;
@@ -28,7 +29,7 @@ sub assert_throws {
         $pkg     = undef;
     }
 
-    elsif ($pkg && (ref $pkg eq 'Regexp' || !ref $pkg)) {
+    elsif ($pkg && ref $pkg eq 'Regexp') {
         $err_msg = $pkg;
         $pkg     = undef;
     }
@@ -39,8 +40,8 @@ sub assert_throws {
         $err_msg       = undef;
     }
 
-    else {
-        $pkg = undef;
+    if (defined $pkg && !defined $err_msg) {
+        $err_msg = $pkg;
     }
 
     my $err;
@@ -55,7 +56,7 @@ sub assert_throws {
         # first, check desired error
         if ($desired_error) {
             $self->assert(
-                $err == $desired_error,
+                $err eq $desired_error,
                 'expected #{this} to throw #{exp} but #{act} was thrown'.
                 'expected #{this} to not throw #{exp}',
                 $desired_error,
@@ -83,9 +84,9 @@ sub assert_throws {
         }
 
         # next, check message
-        my $message = !ref $err ? $err : "$err";
+        my $message = !ref $err ? $err : obj_display($err);
 
-        if (!defined $message && ref $err_msg eq 'Regexp') {
+        if (defined $message && ref $err_msg eq 'Regexp') {
             $self->assert(
                 @{[ $message =~ /$err_msg/ ]} > 0,
           		'expected #{this} to throw error matching #{exp} but got #{act}',
@@ -98,11 +99,11 @@ sub assert_throws {
             return $self;
         }
 
-        elsif (!defined $message && !ref $err_msg) {
+        elsif (defined $message && defined $err_msg && !ref $err_msg) {
             $self->assert(
                 index($message, $err_msg) > -1,
                 'expected #{this} to throw error including #{exp} but got #{act}',
-                'expected #{this} to throw error not including #{act}',
+                'expected #{this} to throw rrror not including #{act}',
                 $err_msg,
                 $message
             );
@@ -117,20 +118,22 @@ sub assert_throws {
         }
     }
 
-    # my $actually_got = '';
-    # my $expected_thrown =
-    #
-    # $actually_got = ' but #{act} was thrown' if $thrown;
+    my $actually_got = '';
+    $actually_got = ' but #{act} was thrown' if $thrown;
 
-    # $self->assert(
-    #     $throw,
-    #     'expected #{this} to throw ' . $expected_thrown . $actually_got,
-    #     'expected #{this} to not throw ' . $expected_thrown . $actually_got
-    #     $desired_error,
-    #     $thrown_error
-    # );
-    #
-    # flag($self, 'object', $thrown_error);
+    my $expected_thrown =
+        defined $pkg           ? $pkg :
+        defined $desired_error ? '#{exp}' : 'an error';
+
+    $self->assert(
+        $thrown,
+        'expected #{this} to throw ' . $expected_thrown . $actually_got,
+        'expected #{this} to not throw ' . $expected_thrown . $actually_got,
+        $desired_error,
+        $thrown_error
+    );
+
+    flag($self, 'object', $thrown_error);
 }
 
 1;

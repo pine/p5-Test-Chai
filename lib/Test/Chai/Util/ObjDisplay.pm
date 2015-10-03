@@ -9,7 +9,7 @@ our @EXPORT_OK = qw/obj_display/;
 use DDP;
 
 sub obj_display {
-    my ($class, $obj) = @_;
+    my $obj = shift;
     return np($obj); # FIXME
 }
 
