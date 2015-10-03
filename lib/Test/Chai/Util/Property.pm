@@ -6,8 +6,8 @@ use utf8;
 use Exporter qw/import/;
 our @EXPORT_OK = qw/has_property/;
 
-use Scalar::Util qw/looks_like_number blessed/;
 use List::MoreUtils qw/any/;
+use Scalar::Util qw/looks_like_number blessed/;
 
 sub has_property {
     my ($name, $obj) = @_;
