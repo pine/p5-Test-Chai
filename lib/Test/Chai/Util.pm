@@ -11,7 +11,7 @@ use DDP;
 
 use Test::Chai::Util::Flag qw/flag/;
 use Test::Chai::Util::PathInfo qw/get_path_info/;
-use Test::Chai::Util::HasProperty qw/has_property/;
+use Test::Chai::Util::Property qw/has_property/;
 use Test::Chai::Util::ObjDisplay qw/obj_display/;
 
 sub test {

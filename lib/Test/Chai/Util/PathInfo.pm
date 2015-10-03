@@ -6,7 +6,7 @@ use utf8;
 use Exporter qw/import/;
 our @EXPORT_OK = qw/get_path_info/;
 
-use Test::Chai::Util::HasProperty qw/has_property/;
+use Test::Chai::Util::Property qw/has_property/;
 
 sub get_path_info {
     my ($path, $obj) = @_;

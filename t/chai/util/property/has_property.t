@@ -5,7 +5,7 @@ use utf8;
 use Test::MockObject;
 
 use t::Util;
-use Test::Chai::Util::HasProperty qw/has_property/;
+use Test::Chai::Util::Property qw/has_property/;
 
 subtest basic => sub {
     subtest undef => sub {

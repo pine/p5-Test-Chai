@@ -1,4 +1,4 @@
-package Test::Chai::Util::HasProperty;
+package Test::Chai::Util::Property;
 use strict;
 use warnings;
 use utf8;

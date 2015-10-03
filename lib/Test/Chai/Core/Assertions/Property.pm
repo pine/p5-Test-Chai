@@ -10,7 +10,7 @@ use Test::Chai::Util::Flag qw/flag/;
 use Test::Chai::Util::Equal qw/equal/;
 use Test::Chai::Util::Inspect qw/inspect/;
 use Test::Chai::Util::PathInfo qw/get_path_info/;
-use Test::Chai::Util::HasProperty qw/has_property/;
+use Test::Chai::Util::Property qw/has_property/;
 
 sub assert_property {
     my ($self, $name, $val, $msg) = @_;
