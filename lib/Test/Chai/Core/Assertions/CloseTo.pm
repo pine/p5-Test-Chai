@@ -6,6 +6,8 @@ use utf8;
 use Exporter qw/import/;
 our @EXPORT_OK = qw/assert_close_to/;
 
+use Scalar::Util qw/looks_like_number/;
+
 use Test::Chai::Util::Flag qw/flag/;
 
 sub assert_close_to {
@@ -16,7 +18,10 @@ sub assert_close_to {
 
     ref($self)->new($obj, $msg)->is->a('Num');
 
-    # FIXME check args
+    if (!looks_like_number($expected) || !looks_like_number($delta)) {
+        $self->_fail('the arguments to close_to must be numbers');
+        return;
+    }
 
     $self->assert(
         abs($obj - $expected) <= $delta,
