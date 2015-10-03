@@ -9,6 +9,7 @@ our @EXPORT_OK = qw/assert_keys/;
 use List::MoreUtils qw/all any/;
 
 use Test::Chai::Util::Flag qw/flag/;
+use Test::Chai::Util::Inspect qw/inspect/;
 
 sub assert_keys {
     my $self = shift;
@@ -61,14 +62,14 @@ sub assert_keys {
 
     # Key string
     if ($len > 1) {
-        @keys = map { $_ } @keys; # FIXME
+        @keys = map { inspect($_) } @keys;
         my $last = pop @keys;
         $str = join(', ', @keys) . ', and ' . $last if $all;
         $str = join(', ', @keys) . ', or '  . $last if $any;
     }
 
     else {
-        $str = $keys[0] // ''; # FIXME
+        $str = defined $keys[0] ? inspect($keys[0]) : '';
     }
 
     # Form
