@@ -14,6 +14,11 @@ subtest basic => sub {
         is has_property(undef, undef), 0;
     };
 
+    subtest number => sub {
+        is has_property(1, 0), 1;
+        is has_property(1, 1), 0;
+    };
+
     subtest array => sub {
         is has_property(0, []), 0;
         is has_property(0, [ 0 ]), 1;
