@@ -361,10 +361,14 @@ subtest expect => sub {
         expect([ 1, 2 ])->to->include(1);
         expect([qw/foo bar/])->to->not->include('baz');
         expect([qw/foo bar/])->to->not->include(1);
+        expect({ a => 1, b => 2 })->to->include(1);
+        expect({ a => 1, b => 2 })->to->not->include(3);
         expect({ a => 1, b => 2 })->to->include({ b => 2 });
         expect({ a => 1, b => 2 })->to->not->include({ b => 3 });
         expect({ a => 1, b => 2 })->to->include({ a => 1, b => 2 });
         expect({ a => 1, b => 2 })->to->not->include({ a => 1, c => 2 });
+        expect('foobar')->to->include('foo');
+        expect('foobar')->to->not->include('baz');
 
         expect([ { a => 1 }, { b => 2 } ])->to->include({ a => 1 });
         expect([ { a => 1 } ])->to->include({ a => 1 });
@@ -376,6 +380,9 @@ subtest expect => sub {
         err { expect({ a => 1 })->to->include({ b => 2 }) };
         err { expect({ a => 1, b => 2 })->to->not->include({ b => 2 }) };
         err { expect([ { a => 1 }, { b => 2 } ])->to->not->include({ b => 2 }) };
+
+        err { expect('foobar')->to->not->include('foo') };
+        err { expect('foobar')->to->include('baz') };
 
         # err { expect(1)->to->include(1) };
         # err { expect(42.0)->to->include(42) };
