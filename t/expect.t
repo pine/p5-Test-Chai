@@ -384,12 +384,8 @@ subtest expect => sub {
         err { expect('foobar')->to->not->include('foo') };
         err { expect('foobar')->to->include('baz') };
 
-        # err { expect(1)->to->include(1) };
-        # err { expect(42.0)->to->include(42) };
-        # err { expect(undef)->to->include(42) };
-        # err { expect(1)->to->not->include(1) }; # FIXME
-        # err { expect(42.0)->to->not->include(42) }; # FIXME
-        # err { expect(undef)->to->not->include(42) }; # FIXME
+        err { expect(undef)->to->include(42) };
+        err { expect(undef)->to->not->include(42) };
     };
 
     subtest 'keys(array|Object|arguments)' => sub {

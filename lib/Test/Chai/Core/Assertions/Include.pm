@@ -19,15 +19,14 @@ use Test::Chai::Util::Inspect qw/inspect/;
 sub assert_include {
     my ($self, $val, $msg) = @_;
 
-    expect_types($self, $val, [ qw/ArrayRef HashRef Value/ ]);
+    my $obj = flag($self, 'object');
+    expect_types($self, $obj, [ qw/ArrayRef HashRef Value/ ]);
 
     flag($self, 'message', $msg) if defined $msg;
-
-    my $obj      = flag($self, 'object');
     my $expected = 0;
 
     if (ref $obj eq 'ARRAY' && ref $val eq 'HASH') {
-        for my $i (keys $obj) {
+        for (my $i = 0; $i < @$obj; ++$i) {
             if (eql($obj->[$i], $val)) {
                 $expected = 1;
                 last;
@@ -37,7 +36,7 @@ sub assert_include {
 
     elsif (ref $val eq 'HASH') {
         if (!flag($self, 'negate')) {
-            for my $k (keys $val) {
+            for my $k (keys %$val) {
                 ref($self)->new($obj)->property($k, $val->{$k});
             }
             return;
