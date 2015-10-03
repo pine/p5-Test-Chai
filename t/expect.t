@@ -527,6 +527,9 @@ subtest expect => sub {
         err { expect([ 1.5 ])->to->be->close_to(1.0, 0.5) };
         err { expect(1.5)->not->to->be->close_to('1.0', 0.5) };
         err { expect(1.5)->not->to->be->close_to(1.0, 1) };
+
+        err { expect(1)->not->to->be->close_to(undef, 1.0) };
+        err { expect(1)->not->to->be->close_to(1.0, undef) };
     };
 
 	subtest 'include.members' => sub {
