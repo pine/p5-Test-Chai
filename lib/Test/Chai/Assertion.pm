@@ -40,7 +40,6 @@ sub assert {
 
     my $ok = test($self, [@_]);
     $show_diff = 0 if defined $show_diff && $show_diff != 1;
-    # $show_diff = 0 if Config->show_diff != 1; # TODO
 
     if (!$ok) {
         my $msg    = get_message($self, [@_]);
