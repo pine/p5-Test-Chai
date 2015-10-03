@@ -12,6 +12,7 @@ before_script:
   - cpanm --quiet --notest --skip-satisfied Devel::Cover::Report::Codecov
 
 script:
+  - prove -r xt
   - HARNESS_PERL_SWITCHES="-MDevel::Cover=+ignore,^local/|^t/|^xt/" prove -r t
 
 after_success:
