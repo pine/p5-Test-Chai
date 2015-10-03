@@ -3,9 +3,9 @@ use warnings FATAL => 'all';
 use utf8;
 
 use t::Util;
-use Test::Chai::Util::GetPathInfo;
+use Test::Chai::Util::PathInfo;
 
-sub _parse_path { Test::Chai::Util::GetPathInfo::_parse_path(@_) }
+sub _parse_path { Test::Chai::Util::PathInfo::_parse_path(@_) }
 
 subtest basic => sub {
     cmp_deeply

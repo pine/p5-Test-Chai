@@ -1,4 +1,4 @@
-package Test::Chai::Util::GetPathInfo;
+package Test::Chai::Util::PathInfo;
 use strict;
 use warnings;
 use utf8;

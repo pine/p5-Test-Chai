@@ -3,9 +3,9 @@ use warnings FATAL => 'all';
 use utf8;
 
 use t::Util;
-use Test::Chai::Util::GetPathInfo;
+use Test::Chai::Util::PathInfo;
 
-sub _get_path_value { Test::Chai::Util::GetPathInfo::_get_path_value(@_) }
+sub _get_path_value { Test::Chai::Util::PathInfo::_get_path_value(@_) }
 
 subtest basic => sub {
     is _get_path_value(
