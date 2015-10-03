@@ -98,6 +98,23 @@ sub assert_throws {
             return $self;
         }
 
+        elsif (!defined $message && !ref $err_msg) {
+            $self->assert(
+                index($message, $err_msg) > -1,
+                'expected #{this} to throw error including #{exp} but got #{act}',
+                'expected #{this} to throw error not including #{act}',
+                $err_msg,
+                $message
+            );
+
+            flag($self, 'object', $err);
+            return $self;
+        }
+
+        else {
+            $thrown       = 1;
+            $thrown_error = $err;
+        }
     }
 
     # my $actually_got = '';
