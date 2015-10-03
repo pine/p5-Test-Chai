@@ -7,6 +7,11 @@ use parent qw/Test::Builder::Module/;
 
 use Test::Chai::AssertionError;
 use Test::Chai::Util::Flag qw/flag/;
+use Test::Chai::Util::Assertion qw/
+    test
+    get_message
+    get_actual
+/;
 use Test::Chai::Util::Reflection qw/
     add_method
     add_property
@@ -14,7 +19,6 @@ use Test::Chai::Util::Reflection qw/
 /;
 
 # alias
-sub Util ()           { 'Test::Chai::Util'           }
 sub AssertionError () { 'Test::Chai::AssertionError' }
 
 sub new {
@@ -34,13 +38,13 @@ sub assert {
     my $self = shift;
     my ($expr, $msg, $negateMsg, $expected, $_actual, $show_diff) = @_;
 
-    my $ok = Util->test($self, [@_]);
+    my $ok = test($self, [@_]);
     $show_diff = 0 if defined $show_diff && $show_diff != 1;
     # $show_diff = 0 if Config->show_diff != 1; # TODO
 
     if (!$ok) {
-        my $msg    = Util->get_message($self, [@_]);
-        my $actual = Util->get_actual($self, [@_]);
+        my $msg    = get_message($self, [@_]);
+        my $actual = get_actual($self, [@_]);
 
         my $err = AssertionError->new($msg, {
             actual    => $actual,
@@ -52,7 +56,7 @@ sub assert {
     }
 
     else {
-        my $msg = Util->get_message($self, [@_]);
+        my $msg = get_message($self, [@_]);
         return $self->_pass($msg);
     }
 }
