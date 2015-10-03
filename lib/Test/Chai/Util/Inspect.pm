@@ -8,7 +8,9 @@ our @EXPORT_OK = qw/inspect/;
 
 use DDP;
 
-# FIXME
-sub inspect { np(@_) }
+sub inspect {
+    my $obj = shift;
+    return np($obj);
+}
 
 1;

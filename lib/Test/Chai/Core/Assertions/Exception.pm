@@ -6,6 +6,7 @@ use utf8;
 use Exporter qw/import/;
 our @EXPORT_OK = qw/assert_throw/;
 
+use DDP;
 use Try::Lite;
 
 use Test::Chai::Util::Flag qw/flag/;
@@ -84,7 +85,7 @@ sub assert_throw {
         }
 
         # next, check message
-        my $message = !ref $err ? $err : obj_display($err);
+        my $message = !ref $err ? $err : np($err);
 
         if (defined $message && ref $err_msg eq 'Regexp') {
             $self->assert(

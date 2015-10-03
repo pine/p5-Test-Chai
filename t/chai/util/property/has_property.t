@@ -15,7 +15,7 @@ subtest basic => sub {
     };
 
     subtest number => sub {
-        is has_property(1, 0), 1;
+        is has_property(0, 1), 1;
         is has_property(1, 1), 0;
     };
 
