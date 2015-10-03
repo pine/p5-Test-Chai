@@ -6,7 +6,7 @@ use utf8;
 use Exporter qw/import/;
 our @EXPORT_OK = qw/assert_eql/;
 
-use Test::Chai::Util::Eql qw/eql/;
+use Test::Chai::Util::Equal qw/eql/;
 use Test::Chai::Util::Flag qw/flag/;
 
 sub assert_eql {

@@ -10,7 +10,7 @@ our @EXPORT_OK = qw/
 /;
 
 use Test::Chai::Util::Flag qw/flag/;
-use Test::Chai::Util::Eql qw/eql/;
+use Test::Chai::Util::Equal qw/eql/;
 
 sub assert_include {
     my ($self, $val, $msg) = @_;

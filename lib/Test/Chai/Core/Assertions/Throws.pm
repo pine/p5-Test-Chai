@@ -6,7 +6,10 @@ use utf8;
 use Exporter qw/import/;
 our @EXPORT_OK = qw/assert_throws/;
 
+use Try::Lite;
+
 use Test::Chai::Util::Flag qw/flag/;
+use Test::Chai::Util::IsType qw/is_type/;
 
 sub assert_throws {
     my ($self, $pkg, $err_msg, $msg) = @_;
@@ -18,18 +21,84 @@ sub assert_throws {
 
     my $thrown        = 0;
     my $desired_error = undef;
-    my $name          = undef;
     my $thrown_error  = undef;
 
-    # if (@_ - 1 == 0) {
-    #     $err_msg = undef;
-    #     $pkg     = undef;
-    # }
-    #
-    # elsif ($pkg && ref($pkg) eq 'Regexp' || !ref($pkg)) {
-    #     $err_msg = $err;
-    #     $pkg     = undef;
-    # }
+    if (@_ - 1 == 0) {
+        $err_msg = undef;
+        $pkg     = undef;
+    }
+
+    elsif ($pkg && (ref $pkg eq 'Regexp' || !ref $pkg)) {
+        $err_msg = $pkg;
+        $pkg     = undef;
+    }
+
+    elsif (ref $pkg) {
+        $desired_error = $pkg;
+        $pkg           = undef;
+        $err_msg       = undef;
+    }
+
+    else {
+        $pkg = undef;
+    }
+
+    my $err;
+    try {
+        $obj->();
+    }
+    '*' => sub {
+        $err = $@;
+    };
+
+    if (defined $err) {
+        # first, check desired error
+        if ($desired_error) {
+            $self->assert(
+                $err == $desired_error,
+                'expected #{this} to throw #{exp} but #{act} was thrown'.
+                'expected #{this} to not throw #{exp}',
+                $desired_error,
+                $err
+            );
+
+            flag($self, 'object', $err);
+            return $self;
+        }
+
+        # next, check constructor
+        if ($pkg) {
+            $self->assert(
+                is_type($err, $pkg),
+                'expected #{this} to throw #{exp} but #{act} was thrown',
+                'expected #{this} to not throw #{exp} but #{act} was thrown',
+                $pkg,
+                $err
+            );
+
+            if (!$err_msg) {
+                flag($self, 'object', $err);
+                return $self;
+            }
+        }
+
+        # next, check message
+        my $message = !ref $err ? $err : "$err";
+
+        if (!defined $message && ref $err_msg eq 'Regexp') {
+            $self->assert(
+                @{[ $message =~ /$err_msg/ ]} > 0,
+          		'expected #{this} to throw error matching #{exp} but got #{act}',
+          		'expected #{this} to throw error not matching #{exp}',
+          		$err_msg,
+                $message
+            );
+
+            flag($self, 'object', $err);
+            return $self;
+        }
+
+    }
 
     # my $actually_got = '';
     # my $expected_thrown =
