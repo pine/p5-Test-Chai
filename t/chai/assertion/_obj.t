@@ -2,8 +2,6 @@ use strict;
 use warnings FATAL => 'all';
 use utf8;
 
-use Test::MockObject;
-
 use t::Util;
 use Test::Chai::Assertion;
 
