@@ -27,7 +27,8 @@ sub has_property {
     }
 
     elsif (looks_like_number($name)) {
-        return 0 <= $name && $name < length $obj;
+        return 1 if 0 <= $name && $name < length $obj;
+        return 0;
     }
 
     elsif ($name eq 'length' && defined $obj && !ref $obj) {
