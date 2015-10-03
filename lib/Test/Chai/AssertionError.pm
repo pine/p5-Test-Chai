@@ -5,9 +5,7 @@ use utf8;
 
 use Data::Structure::Util qw/unbless/;
 
-use Test::Chai::Util;
 use Test::Chai::Util::ObjDisplay qw/obj_display/;
-sub Util { 'Test::Chai::Util' }
 
 sub exclude {
     my $excludes = [@_];
