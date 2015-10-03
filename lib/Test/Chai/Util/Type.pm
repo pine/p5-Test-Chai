@@ -1,4 +1,4 @@
-package Test::Chai::Util::IsType;
+package Test::Chai::Util::Type;
 use strict;
 use warnings;
 use utf8;

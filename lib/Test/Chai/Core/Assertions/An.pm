@@ -7,7 +7,7 @@ use Exporter qw/import/;
 our @EXPORT_OK = qw/assert_an/;
 
 use Test::Chai::Util::Flag qw/flag/;
-use Test::Chai::Util::IsType qw/is_type/;
+use Test::Chai::Util::Type qw/is_type/;
 
 sub assert_an {
     my ($self, $type, $msg) = @_;

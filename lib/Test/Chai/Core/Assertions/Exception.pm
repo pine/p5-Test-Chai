@@ -9,7 +9,7 @@ our @EXPORT_OK = qw/assert_throw/;
 use Try::Lite;
 
 use Test::Chai::Util::Flag qw/flag/;
-use Test::Chai::Util::IsType qw/is_type/;
+use Test::Chai::Util::Type qw/is_type/;
 use Test::Chai::Util::ObjDisplay qw/obj_display/;
 
 sub assert_throw {
