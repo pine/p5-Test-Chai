@@ -11,6 +11,7 @@ our @EXPORT_OK = qw/
 
 use Test::Chai::Util::Flag qw/flag/;
 use Test::Chai::Util::Equal qw/eql/;
+use Test::Chai::Util::Inspect qw/inspect/;
 
 sub assert_include {
     my ($self, $val, $msg) = @_;
@@ -60,8 +61,8 @@ sub assert_include {
 
     return $self->assert(
         $expected,
-        'expected #{this} to include ' . $val, # FIXME
-        'expected #{this} to not include ' . $val
+        'expected #{this} to include ' . inspect($val),
+        'expected #{this} to not include ' . inspect($val)
     );
 }
 
