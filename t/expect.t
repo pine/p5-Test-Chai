@@ -229,10 +229,10 @@ subtest expect => sub {
         expect(qr/a/)->not->to->deep->equal(qr/b/);
         expect(qr/a/)->not->to->deep->equal({});
         expect(qr/a/m)->to->deep->equal(qr/a/m);
-        expect(qr/a/m)->not->to->deep->equal(qr/b/m); # TODO
+        expect(qr/a/m)->not->to->deep->equal(qr/b/m);
     };
 
-    # FIXME deep.equal(Date)
+    # TODO deep.equal(Date)
 
     subtest empty => sub {
         expect('')->to->be->empty;
