@@ -1,10 +1,10 @@
-package Test::Chai::Core::Assertions::Throws;
+package Test::Chai::Core::Assertions::Exception;
 use strict;
 use warnings;
 use utf8;
 
 use Exporter qw/import/;
-our @EXPORT_OK = qw/assert_throws/;
+our @EXPORT_OK = qw/assert_throw/;
 
 use Try::Lite;
 
@@ -12,7 +12,7 @@ use Test::Chai::Util::Flag qw/flag/;
 use Test::Chai::Util::IsType qw/is_type/;
 use Test::Chai::Util::ObjDisplay qw/obj_display/;
 
-sub assert_throws {
+sub assert_throw {
     my ($self, $pkg, $err_msg, $msg) = @_;
 
     flag($self, 'message', $msg) if defined $msg;

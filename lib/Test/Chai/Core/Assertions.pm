@@ -138,9 +138,10 @@ use Test::Chai::Core::Assertions::Keys qw/assert_keys/;
 Assertion->add_method('keys', \&assert_keys);
 Assertion->add_method('key',  \&assert_keys);
 
-use Test::Chai::Core::Assertions::Throws qw/assert_throws/;
-Assertion->add_method('throw',  \&assert_throws);
-Assertion->add_method('throws', \&assert_throws);
+use Test::Chai::Core::Assertions::Exception qw/assert_throw/;
+Assertion->add_method('throw',  \&assert_throw);
+Assertion->add_method('Throw',  \&assert_throw);
+Assertion->add_method('throws', \&assert_throw);
 
 use Test::Chai::Core::Assertions::RespondTo qw/assert_respond_to/;
 Assertion->add_method('respond_to',  \&assert_respond_to);
