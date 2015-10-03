@@ -41,17 +41,16 @@ sub assert_property {
     else {
         $self->assert(
             $has_property,
-            'expected #{this} to have a ' . $descriptor . $name, # FIXME
-            'expected #{this} to not have ' . $descriptor . $name
+            'expected #{this} to have a ' . $descriptor . inspect($name),
+            'expected #{this} to not have ' . $descriptor . inspect($name)
         );
     }
 
     if (@_ - 1 > 1) {
-        # FIXME: inspect
         $self->assert(
             equal($val, $value),
-            'expected #{this} to have a ' . $descriptor . $name . ' of #{exp}, but got #{act}',
-            'expected #{this} to not have a ' . $descriptor . $name . ' of #{act}',
+            'expected #{this} to have a ' . $descriptor . inspect($name) . ' of #{exp}, but got #{act}',
+            'expected #{this} to not have a ' . $descriptor . inspect($name) . ' of #{act}',
             $val,
             $value
         );
