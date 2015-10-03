@@ -9,14 +9,17 @@ our @EXPORT_OK = qw/
     assert_include_chaining_behavior
 /;
 
+use List::MoreUtils qw/any/;
+
 use Test::Chai::Util::Flag qw/flag/;
 use Test::Chai::Util::Equal qw/eql/;
+use Test::Chai::Util::Type qw/is_type/;
 use Test::Chai::Util::Inspect qw/inspect/;
 
 sub assert_include {
     my ($self, $val, $msg) = @_;
 
-    # FIXME expectTypes
+    expect_types($self, $val, [ qw/ArrayRef HashRef Value/ ]);
 
     flag($self, 'message', $msg) if defined $msg;
 
@@ -68,6 +71,29 @@ sub assert_include {
 
 sub assert_include_chaining_behavior {
     flag(shift, 'contains', 1);
+}
+
+sub expect_types {
+    my ($self, $obj, $types) = @_;
+
+    for my $expected (@$types) {
+        return if is_type($obj, $expected);
+    }
+
+    $types = [ sort map { lc $_ } @$types ];
+
+    my @strs;
+    for (my $index = 0; $index < @$types; ++$index) {
+        my $t = $types->[$index];
+
+        my $art = (grep { $_ eq substr($t, 0, 1) } qw/a e i o u/) ? 'an' : 'a';
+        my $or  = @$types > 1 && $index == @$types - 1 ? 'or ' : '';
+
+        push @strs, $or . $art . ' ' . $t;
+    }
+
+    my $str = join(', ', @strs);
+    $self->_fail('object tested must be ' . $str . ', but ' . inspect($obj) . ' given');
 }
 
 1;
