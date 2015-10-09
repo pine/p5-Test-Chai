@@ -2,7 +2,7 @@ package Test::Chai;
 use strict;
 use warnings;
 use utf8;
-our $VERSION = "0.01";
+our $VERSION = "0.01_01";
 
 use Exporter qw/import/;
 our @EXPORT_OK = qw/expect/;
