@@ -6,7 +6,7 @@
    "dynamic_config" : 0,
    "generated_by" : "Minilla/v2.5.0, CPAN::Meta::Converter version 2.150005",
    "license" : [
-      "unknown"
+      "mit"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
@@ -42,19 +42,29 @@
       },
       "runtime" : {
          "requires" : {
-            "DDP" : "0",
-            "Data::Structure::Util" : "0",
-            "Mouse::Util::TypeConstraints" : "0",
-            "Scalar::Util" : "0",
-            "Test::Deep::NoTest" : "0",
+            "Data::Printer" : "0.36",
+            "Data::Structure::Util" : "0.16",
+            "Exception::Tiny" : "v0.2.1",
+            "List::MoreUtils" : "0.413",
+            "Mouse" : "v2.4.5",
+            "Scalar::Util" : "1.42",
+            "Scalar::Util::Numeric" : "0.40",
+            "Test::Deep" : "0.119",
+            "Try::Lite" : "v0.0.3",
             "perl" : "5.010000"
          }
       },
       "test" : {
          "requires" : {
             "Module::Find" : "0.13",
-            "Test::Mock::Guard" : "0",
-            "Test::More" : "0.98"
+            "Perl::Critic" : "1.125",
+            "Test::Deep" : "0.117",
+            "Test::Deep::Matcher" : "0.01",
+            "Test::Exception" : "0.40",
+            "Test::Mock::Guard" : "0.10",
+            "Test::MockObject" : "1.20150527",
+            "Test::More" : "0.98",
+            "Test::Perl::Critic" : "1.03"
          }
       }
    },
@@ -70,7 +80,7 @@
          "web" : "https://github.com/pine613/p5-Test-Chai"
       }
    },
-   "version" : "0.01",
+   "version" : "0.01_01",
    "x_authority" : "cpan:PINE",
    "x_contributors" : [
       "Pine Mizune <pinemz@gmail.com>"

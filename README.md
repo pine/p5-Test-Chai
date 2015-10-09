@@ -1,6 +1,4 @@
 [![Build Status](https://travis-ci.org/pine613/p5-Test-Chai.svg?branch=master)](https://travis-ci.org/pine613/p5-Test-Chai)
-[![codecov.io](http://codecov.io/github/pine613/p5-Test-Chai/coverage.svg?branch=master)](http://codecov.io/github/pine613/p5-Test-Chai?branch=master)
-
 # NAME
 
 Test::Chai - BDD / TDD assertion framework for Perl that can be paired with any testing framework
@@ -49,4 +47,4 @@ THE SOFTWARE.
 
 # AUTHOR
 
-Pine Mizune &lt;<pine@cpan.org>&gt;
+Pine Mizune <pine@cpan.org<gt>
